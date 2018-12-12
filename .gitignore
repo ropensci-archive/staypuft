@@ -1,0 +1,6 @@
+.DS_Store
+.Rhistory
+.RDataTmp
+revdep/checks.noindex
+revdep/data.sqlite
+revdep/library.noindex

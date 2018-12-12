@@ -1,0 +1,22 @@
+Package: staypuft
+Title: Convert Complex Objects to and from R Data Structures
+Description: Convert complex objects to and from R data structures.
+Version: 0.0.1.9000
+Authors@R: 
+    person(given = "Scott",
+           family = "Chamberlain",
+           role = c("aut", "cre"),
+           email = "sckott@protonmail.com", 
+           comment = c(ORCID="0000-0003-1444-9135"))
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+URL: https://github.com/ropensci/staypuft
+BugReports: https://github.com/ropensci/staypuft/issues
+Roxygen: list(markdown = TRUE)
+Imports:
+    R6,
+    glue,
+    jsonlite
+RoxygenNote: 6.1.1
