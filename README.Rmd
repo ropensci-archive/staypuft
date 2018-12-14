@@ -28,13 +28,43 @@ library("staypuft")
 
 ```{r}
 z <- Schema$new("MySchema",
-  name = Character$new(),
-  title = Character$new()
+  name = puft_fields$character(),
+  title = puft_fields$character(),
+  num = puft_fields$integer()
 )
 z
-x <- list(name = "Jane Doe", title = "Howdy doody")
-z$load(x)
+x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
+z$load(data = x)
 z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
+```
+
+strict mode for integer
+
+```{r}
+z <- Schema$new("MySchema",
+  name = puft_fields$character(),
+  title = puft_fields$character(),
+  num = puft_fields$integer(strict = TRUE)
+)
+z$fields$num
+x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
+z$load(data = x)
+```
+
+another example
+
+```{r}
+z <- Schema$new("MySchema",
+  name = puft_fields$character(),
+  title = puft_fields$character(),
+  num = puft_fields$integer(),
+  uuid = puft_fields$uuid()
+)
+x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
+    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5")
+z$load(data = x)
+x$uuid <- "foo-bar"
+z$load(data = x)
 ```
 
 ## Meta

@@ -115,16 +115,15 @@ A helper method that simply raises a \code{ValidationError}.
 }
 }
 \examples{
-x <- Field$new()
+x <- puft_fields$field()
 x
 x$error_messages
 
-
-z <- Character$new()
+z <- puft_fields$character()
 z
 z$error_messages
 z$serialize(attr = "foo", obj = list(foo = "bar"))
 z$deserialize("foo")
-z$deserialize(miss_ing)
+z$deserialize(puft_fields$missing())
 }
 \keyword{datasets}

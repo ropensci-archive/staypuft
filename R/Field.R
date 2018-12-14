@@ -101,17 +101,16 @@
 #' @format NULL
 #' @usage NULL
 #' @examples
-#' x <- Field$new()
+#' x <- puft_fields$field()
 #' x
 #' x$error_messages
 #' 
-#' 
-#' z <- Character$new()
+#' z <- puft_fields$character()
 #' z
 #' z$error_messages
 #' z$serialize(attr = "foo", obj = list(foo = "bar"))
 #' z$deserialize("foo")
-#' z$deserialize(miss_ing)
+#' z$deserialize(puft_fields$missing())
 Field <- R6::R6Class(
   "Field",
   public = list(
@@ -199,7 +198,7 @@ Field <- R6::R6Class(
           dump_only={self$dump_only}
           missing={self$missing$class_name}
           allow_none={self$allow_none %||% "none"}
-          error_messages={self$error_messages %||% "none"}'), sep = "\n  ")
+          error_messages={print_err_mssgs(self$error_messages %||% "none")}'), sep = "\n  ")
     },
 
     get_value = function(obj, attr, accessor=NULL, default=miss_ing) {
@@ -319,17 +318,46 @@ Field <- R6::R6Class(
 
 #' staypuft fields
 #' 
-#' @name staypuft_fields
+#' @export
+#' @name puft_fields
 #' @details
 #' types of fields: 
 #' 
 #' - `Missing`
 #' - `Character`
+#' - `UUID`
+#' - `Number`
+#' - `Integer`
 #' - more coming ...
-NULL
+#' @examples
+#' puft_fields
+#' puft_fields$field()
+#' puft_fields$missing()
+#' puft_fields$character()
+#' puft_fields$number()
+#' puft_fields$integer()
+#' puft_fields$uuid()
+puft_fields <- list(
+  field = function(...) {
+    Field$new(...)
+  },
+  missing = function(...) {
+    Missing$new(...)
+  },
+  character = function(...) {
+    Character$new(...)
+  },
+  number = function(...) {
+    Number$new(...)
+  },
+  integer = function(...) {
+    Integer$new(...)
+  },
+  uuid = function(...) {
+    UUID$new(...)
+  }
+)
 
-#' @export
-#' @rdname staypuft_fields
 Missing = R6::R6Class("Missing",
   public = list(
     class_name = "Missing",
@@ -339,12 +367,8 @@ Missing = R6::R6Class("Missing",
     }
   )
 )
-#' @export
-#' @rdname staypuft_fields
 miss_ing = Missing$new()
 
-#' @export
-#' @rdname staypuft_fields
 Character <- R6::R6Class("Character",
   inherit = Field,
   public = list(
@@ -364,6 +388,100 @@ Character <- R6::R6Class("Character",
   )
 )
 
+UUID <- R6::R6Class("UUID",
+  inherit = Character,
+  public = list(
+    class_name = "UUID",
+    error_messages_ = list(
+      invalid_uuid = 'Not a valid UUID.'
+    ),
+    validated = function(value) {
+      if (is.null(value)) return(NULL)
+      # from https://stackoverflow.com/a/13653180/1091766
+      uuid_regex <- "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      if (!grepl(uuid_regex, value)) super$fail("invalid_uuid")
+      return(value)
+    },
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      if (is.null(value)) return(NULL)
+      ret <- as.character(self$validated(value))
+      super$serialize_(value)
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      self$validated(value)
+    }
+  )
+)
+
+Number <- R6::R6Class("Number",
+  inherit = Field,
+  public = list(
+    class_name = "Number",
+    as_string = FALSE,
+    initialize = function(..., as_string = FALSE) {
+      super$initialize(...)
+      self$as_string <- as_string
+    },
+    error_messages_ = list(
+      invalid = 'Not a valid number.'
+    ),
+    format_num = function(value) {
+      if (!is.numeric(value)) {
+        stop("value must be numeric")
+      }
+      as.numeric(value)
+    },
+    validated = function(value) {
+      if (is.null(value)) return(NULL)
+      tmp <- tryCatch(self$format_num(value), error = function(e) e)
+      if (inherits(tmp, "error")) super$fail("invalid")
+      return(tmp)
+    },
+    to_string = function(value) {
+      as.character(value)
+    },
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      ret <- self$validated(value)
+      if (self$as_string && !is.null(ret) && !inherits(ret, "Missing")) {
+        self$to_string(ret)
+      } else {
+        ret
+      }
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      self$validated(value)
+    }
+  )
+)
+
+Integer <- R6::R6Class("Integer",
+  inherit = Number,
+  public = list(
+    class_name = "Integer",
+    strict = FALSE,
+    initialize = function(..., strict = FALSE) {
+      super$initialize(...)
+      self$strict <- strict
+    },
+    error_messages_ = list(
+      invalid = 'Not a valid integer.'
+    ),
+    format_num = function(value) {
+      if (self$strict) {
+        if (is.integer(value)) return(super$format_num(value))
+        super$fail("invalid")
+      }
+      super$format_num(value)
+    }
+  )
+)
+
 MISSING_ERROR_MESSAGE = 
   'ValidationError raised by `{self$class_name}`, but error key `{key}` does 
      not exist in the `error_messages` list'
+
+print_err_mssgs <- function(x) {
+  if (is.character(x)) return(x)
+  tmp <- sprintf("%s: '%s'", names(x), unname(unlist(x)))
+  paste(tmp, collapse = "; ")
+}

@@ -22,8 +22,8 @@
 #' @usage NULL
 #' @examples
 #' z <- Schema$new("FooBar",
-#'   name = Character$new(),
-#'   title = Character$new()
+#'   name = puft_fields$character(),
+#'   title = puft_fields$character()
 #' )
 #' z
 #' z$fields
@@ -37,8 +37,8 @@
 #' 
 #' 
 #' z <- Schema$new("MySchema",
-#'   name = Character$new(),
-#'   title = Character$new()
+#'   name = puft_fields$character(),
+#'   title = puft_fields$character()
 #' )
 #' z
 #' x <- list(name = "Jane Doe", title = "Howdy doody")
@@ -80,24 +80,27 @@ Schema <- R6::R6Class("Schema",
       jsonlite::toJSON(self$dump(x), ...)
     },
 
-    load = function(data, many = NULL, partial = NULL, unknown = "raise", ...) {
+    load = function(data, many = NULL, partial = FALSE, unknown = "raise", ...) {
       must_include(unknown, c('raise', 'exclude', 'include'))
       ret = list()
       for (i in seq_along(self$fields)) {
         key <- names(self$fields)[i]
         fld <- self$fields[[i]]
         raw_value <- data[[key]] %||% miss_ing
-        # if (inherits(raw_value, "Missing")) {
-        #   # do something
-        # }
+        
+        if (inherits(raw_value, "Missing")) {
+          # FIXME: other logic
+          if (partial) next
+        }
 
         # if nested, do something ...
 
         # deserialize
-        val <- fld$deserialize(raw_value, key)
-
-        # append to list
-        ret[[ key ]] <- val
+        if (!inherits(raw_value, "Missing")) {
+          val <- fld$deserialize(raw_value, key)
+          # append to list
+          ret[[ key ]] <- val
+        }
       }
      
       # handle missing

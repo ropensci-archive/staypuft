@@ -26,8 +26,8 @@ xxx
 }
 \examples{
 z <- Schema$new("FooBar",
-  name = Character$new(),
-  title = Character$new()
+  name = puft_fields$character(),
+  title = puft_fields$character()
 )
 z
 z$fields
@@ -41,8 +41,8 @@ z$dump_json(x, auto_unbox = TRUE)
 
 
 z <- Schema$new("MySchema",
-  name = Character$new(),
-  title = Character$new()
+  name = puft_fields$character(),
+  title = puft_fields$character()
 )
 z
 x <- list(name = "Jane Doe", title = "Howdy doody")
