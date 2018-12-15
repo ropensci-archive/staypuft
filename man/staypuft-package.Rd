@@ -4,9 +4,9 @@
 \name{staypuft-package}
 \alias{staypuft-package}
 \alias{staypuft}
-\title{Easy http}
+\title{Convert Complex Objects to and from R Data Structures}
 \description{
-Easy http
+Convert Complex Objects to and from R Data Structures
 }
 \author{
 Scott Chamberlain \email{sckott@protonmail.com}

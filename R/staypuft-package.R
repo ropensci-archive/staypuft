@@ -1,4 +1,4 @@
-#' Easy http
+#' Convert Complex Objects to and from R Data Structures
 #'
 #' @name staypuft-package
 #' @importFrom R6 R6Class
