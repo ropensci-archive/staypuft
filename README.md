@@ -41,6 +41,11 @@ z$load(data = x)
 #> 
 #> $num
 #> [1] 5.5
+z$load(data = x, as_df = TRUE)
+#> # A tibble: 1 x 3
+#>   name     title         num
+#>   <chr>    <chr>       <dbl>
+#> 1 Jane Doe Howdy doody   5.5
 z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
 #> $name
 #> [1] "Jane Doe"
@@ -85,10 +90,12 @@ z <- Schema$new("MySchema",
   name = puft_fields$character(),
   title = puft_fields$character(),
   num = puft_fields$integer(),
-  uuid = puft_fields$uuid()
+  uuid = puft_fields$uuid(),
+  foo = puft_fields$boolean()
 )
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
-    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5")
+    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5",
+    foo = TRUE)
 z$load(data = x)
 #> $name
 #> [1] "Jane Doe"
@@ -101,9 +108,20 @@ z$load(data = x)
 #> 
 #> $uuid
 #> [1] "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
+#> 
+#> $foo
+#> [1] TRUE
+
+# invalid uuid
 x$uuid <- "foo-bar"
 z$load(data = x)
 #> Error in super$fail("invalid_uuid"): ValidationError: Not a valid UUID.
+
+# invalid boolean
+x$uuid <- "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
+x$foo <- "bar"
+z$load(data = x)
+#> Error in super$fail("invalid"): ValidationError: Not a valid boolean.
 ```
 
 ## Meta

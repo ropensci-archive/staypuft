@@ -18,7 +18,8 @@ Roxygen: list(markdown = TRUE)
 Imports:
     R6,
     glue,
-    jsonlite
+    jsonlite,
+    tibble
 Suggests:
     testthat
 RoxygenNote: 6.1.1

@@ -135,6 +135,7 @@ Field <- R6::R6Class(
     missing = NULL,
     metadata = NULL,
     error_messages = list(),
+    validators = list(),
 
     initialize = function(
       default=miss_ing, attribute=NULL, data_key=NULL,
@@ -145,6 +146,7 @@ Field <- R6::R6Class(
       self$attribute = attribute
       self$data_key = data_key
       self$validate = validate
+      self$validators = list()
       # if utils.is_iterable_but_not_string(validate):
       #     if not utils.is_generator(validate):
       #         self$validators = validate
@@ -328,6 +330,7 @@ Field <- R6::R6Class(
 #' - `UUID`
 #' - `Number`
 #' - `Integer`
+#' - `Boolean`
 #' - more coming ...
 #' @examples
 #' puft_fields
@@ -337,6 +340,7 @@ Field <- R6::R6Class(
 #' puft_fields$number()
 #' puft_fields$integer()
 #' puft_fields$uuid()
+#' puft_fields$boolean()
 puft_fields <- list(
   field = function(...) {
     Field$new(...)
@@ -355,6 +359,9 @@ puft_fields <- list(
   },
   uuid = function(...) {
     UUID$new(...)
+  },
+  boolean = function(...) {
+    Boolean$new(...)
   }
 )
 
@@ -476,6 +483,84 @@ Integer <- R6::R6Class("Integer",
   )
 )
 
+Boolean <- R6::R6Class("Boolean",
+  inherit = Field,
+  public = list(
+    class_name = "Boolean",
+    # Default truthy values
+    truthy = c(
+      't', 'T',
+      'true', 'True', 'TRUE',
+      'on', 'On', 'ON',
+      '1', 1,
+      TRUE
+    ),
+    # Default falsy values
+    falsy = c(
+      'f', 'F',
+      'false', 'False', 'FALSE',
+      'off', 'Off', 'OFF',
+      '0', 0, 0.0,
+      FALSE
+    ),
+    initialize = function(..., truthy = NULL, falsy = NULL) {
+      super$initialize(...)
+      if (!is.null(truthy)) self$truthy <- c(self$truthy, truthy)
+      if (!is.null(falsy)) self$falsy <- c(self$falsy, falsy)
+    },
+    error_messages_ = list(
+      invalid = 'Not a valid boolean.'
+    ),
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      if (is.null(value)) return(NULL)
+      if (value %in% self$truthy) return(TRUE)
+      if (value %in% self$falsy) return(FALSE)
+      return(as.logical(value))
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      if (length(self$truthy) == 0 || 
+        all(is.na(self$truthy)) || 
+        is.null(self$truthy)
+      ) {
+        return(as.logical(value))
+      } else {
+        if (value %in% self$truthy) return(TRUE)
+        if (value %in% self$falsy) return(FALSE)
+      }
+      super$fail("invalid")
+    }
+  )
+)
+
+# Url <- R6::R6Class("Url",
+#   inherit = Character,
+#   public = list(
+#     class_name = "Url",
+#     relative = NULL,
+#     require_tld = NULL,
+#     error_messages_ = list(
+#       invalid_uuid = 'Not a valid URL.'
+#     ),
+#     initialize = function(..., relative = FALSE, schemes = NULL, 
+#       require_tld = TRUE) {
+
+#       super$initialize(...)
+#       self$relative = relative
+#       self$require_tld = require_tld
+#       super$validators <- c(
+#         super$validators,
+#         validate$URL
+#       )
+#     },
+#     validated = function(value) {
+#       if (is.null(value)) return(NULL)
+#       validate_url()
+#     }
+#   )
+# )
+
+
+# missing error message
 MISSING_ERROR_MESSAGE = 
   'ValidationError raised by `{self$class_name}`, but error key `{key}` does 
      not exist in the `error_messages` list'

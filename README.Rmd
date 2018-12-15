@@ -35,6 +35,7 @@ z <- Schema$new("MySchema",
 z
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
 z$load(data = x)
+z$load(data = x, as_df = TRUE)
 z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
 ```
 
@@ -58,12 +59,21 @@ z <- Schema$new("MySchema",
   name = puft_fields$character(),
   title = puft_fields$character(),
   num = puft_fields$integer(),
-  uuid = puft_fields$uuid()
+  uuid = puft_fields$uuid(),
+  foo = puft_fields$boolean()
 )
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
-    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5")
+    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5",
+    foo = TRUE)
 z$load(data = x)
+
+# invalid uuid
 x$uuid <- "foo-bar"
+z$load(data = x)
+
+# invalid boolean
+x$uuid <- "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
+x$foo <- "bar"
 z$load(data = x)
 ```
 

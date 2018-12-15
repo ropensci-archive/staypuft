@@ -49,6 +49,14 @@
 #' # x <- list(name = "Jane Doe", my_title = "Howdy doody")
 #' # z$load(x)
 #' # z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
+#' 
+#' # as data.frame
+#' z <- Schema$new("MySchema",
+#'   name = puft_fields$character(),
+#'   title = puft_fields$character()
+#' )
+#' x <- list(name = "Jane Doe", title = "hello world")
+#' z$load(x, as_df = TRUE)
 Schema <- R6::R6Class("Schema",
   public = list(
     schema_name = NULL,
@@ -80,7 +88,9 @@ Schema <- R6::R6Class("Schema",
       jsonlite::toJSON(self$dump(x), ...)
     },
 
-    load = function(data, many = NULL, partial = FALSE, unknown = "raise", ...) {
+    load = function(data, many = NULL, partial = FALSE, unknown = "raise", 
+      as_df = FALSE, ...) {
+
       must_include(unknown, c('raise', 'exclude', 'include'))
       ret = list()
       for (i in seq_along(self$fields)) {
@@ -117,8 +127,7 @@ Schema <- R6::R6Class("Schema",
         }
       }
       
-      # return data
-      return(ret)
+      return(if (as_df) tibble::as_tibble(ret) else ret)
     },
 
     load_json = function(x, ...) {

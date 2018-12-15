@@ -4,7 +4,7 @@
 \name{puft_fields}
 \alias{puft_fields}
 \title{staypuft fields}
-\format{An object of class \code{list} of length 6.}
+\format{An object of class \code{list} of length 7.}
 \usage{
 puft_fields
 }
@@ -19,6 +19,7 @@ types of fields:
 \item \code{UUID}
 \item \code{Number}
 \item \code{Integer}
+\item \code{Boolean}
 \item more coming ...
 }
 }
@@ -30,5 +31,6 @@ puft_fields$character()
 puft_fields$number()
 puft_fields$integer()
 puft_fields$uuid()
+puft_fields$boolean()
 }
 \keyword{datasets}

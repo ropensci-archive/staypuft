@@ -53,5 +53,13 @@ z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
 # x <- list(name = "Jane Doe", my_title = "Howdy doody")
 # z$load(x)
 # z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
+
+# as data.frame
+z <- Schema$new("MySchema",
+  name = puft_fields$character(),
+  title = puft_fields$character()
+)
+x <- list(name = "Jane Doe", title = "hello world")
+z$load(x, as_df = TRUE)
 }
 \keyword{datasets}
