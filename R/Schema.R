@@ -127,7 +127,7 @@ Schema <- R6::R6Class("Schema",
         }
       }
       
-      return(if (as_df) tibble::as_tibble(ret) else ret)
+      if (as_df) as_tbl(ret) else ret
     },
 
     load_json = function(x, ...) {
@@ -135,3 +135,8 @@ Schema <- R6::R6Class("Schema",
     }
   )
 )
+
+as_tbl <- function(x) {
+  chek_for_pkg('tibble')
+  tibble::as_tibble(x)
+}

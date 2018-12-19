@@ -15,3 +15,10 @@ must_include <- function(x, y) {
     stop(glue::glue("{x} must be one of {paste0(y, collapse = ', ')}"))
   }
 }
+chek_for_pkg <- function(x) {
+  if (!requireNamespace(x, quietly = TRUE)) {
+    stop("Please install ", x, call. = FALSE)
+  } else {
+    invisible(TRUE)
+  }
+}
