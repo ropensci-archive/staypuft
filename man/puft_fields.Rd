@@ -33,6 +33,6 @@ puft_fields$number()
 puft_fields$integer()
 puft_fields$uuid()
 puft_fields$boolean()
-puft_fieldsl$any()
+puft_fields$any()
 }
 \keyword{datasets}
