@@ -3,6 +3,9 @@ dist: trusty
 sudo: false
 cache: packages
 
+r_binary_packages:
+  - tibble
+
 env:
    global:
      - R_LIBS="https://cran.rstudio.com"
