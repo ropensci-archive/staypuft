@@ -11,7 +11,7 @@ Authors@R:
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-US
-URL: https://github.com/ropensci/staypuft
+URL: https://docs.ropensci.org/staypuft, https://github.com/ropensci/staypuft
 BugReports: https://github.com/ropensci/staypuft/issues
 Roxygen: list(markdown = TRUE)
 Imports:
