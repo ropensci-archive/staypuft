@@ -12,7 +12,8 @@
 #' - `Integer`
 #' - `Boolean`
 #' - `Any`
-#' - more coming soon ...
+#' - more coming soon
+#' 
 #' @examples
 #' puft_fields
 #' puft_fields$field()

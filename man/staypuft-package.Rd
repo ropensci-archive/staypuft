@@ -9,6 +9,6 @@
 Convert Complex Objects to and from R Data Structures
 }
 \author{
-Scott Chamberlain \email{sckott@protonmail.com}
+Scott Chamberlain \email{myrmecocystus@gmail.com}
 }
 \keyword{package}

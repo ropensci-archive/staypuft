@@ -1,105 +1,12 @@
-#' Field
+#' @title Field
+#' @description Basic field from which other fields should extend
 #' 
-#' Basic field from which other fields should extend. It applies no
-#' formatting by default, and should only be used in cases where
-#' data does not need to be formatted before being serialized or deserialized.
-#' On error, the name of the field will be returned.
+#' @details It applies no formatting by default, and should only be used
+#' in cases where data does not need to be formatted before being
+#' serialized or deserialized. On error, the name of the field will be
+#' returned.
 #' 
 #' @export
-#' @param default If set, this value will be used during serialization if 
-#' the input value is missing. If not set, the field will be excluded from
-#' the serialized output if the input value is missing. May be a value or 
-#' a callable.
-#' @param attribute The name of the key to get the value from when 
-#' deserializing. If `None`, assumes the key has the same name as the 
-#' field.
-#' @param data_key The name of the key to get the value from when 
-#' deserializing. If `None`, assumes the key has the same name as the field.
-#' @param validate Validator or collection of validators that 
-#' are called during deserialization. Validator takes a field's input 
-#' value as its only parameter and returns a boolean. If it returns `FALSE`, 
-#' an :exc:`ValidationError` is raised.
-#' @param required  Raise a :exc:`ValidationError` if the field value
-#' is not supplied during deserialization.
-#' @param allow_none  Set this to `TRUE` if `None` should be considered a 
-#' valid value during validation/deserialization. If `missing=NULL` 
-#' and `allow_none` is unset, will default to `TRUE`. Otherwise, the 
-#' default is `FALSE`.
-#' @param load_only If `TRUE` skip this field during serialization, 
-#' otherwise its value will be present in the serialized data.
-#' @param dump_only If `TRUE` skip this field during deserialization, 
-#' otherwise its value will be present in the deserialized object. In the 
-#' context of an HTTP API, this effectively marks the field as "read-only".
-#' @param missing  Default deserialization value for the field if the field 
-#' is not found in the input data. May be a value or a callable.
-#' @param error_messages Overrides for `Field.default_error_messages`.
-#' @param metadata  Extra arguments to be stored as metadata.
-#' @details
-#' **Methods**
-#'   \describe{
-#'     \item{`serialize(x, ...)`}{
-#'      Pulls the value for the given key from the object, applies the
-#'      field's formatting and returns the result.
-#'      :param str attr: The attribute or key to get from the object.
-#'      :param str obj: The object to pull the key from.
-#'      :param callable accessor: Function used to pull values from `obj`.
-#'      :param dict kwargs': Field-specific keyword arguments.
-#'      :raise ValidationError: In case of formatting problem
-#'     }
-#'     \item{`deserialize(x, ...)`}{
-#'      Deserialize `value`.
-#'      :param value: The value to be deserialized.
-#'      :param str attr: The attribute/key in `data` to be deserialized.
-#'      :param dict data: The raw input data passed to the `Schema.load`.
-#'      :param dict kwargs': Field-specific keyword arguments.
-#'      :raise ValidationError: If an invalid value is passed or if a required value
-#'          is missing.
-#'     }
-#'     \item{`serialize_(x, ...)`}{
-#'      Serializes `value` to a basic Python datatype. Noop by default.
-#'      Concrete :class:`Field` classes should implement this method.
-#'      :param value: The value to be serialized.
-#'      :param str attr: The attribute or key on the object to be serialized.
-#'      :param object obj: The object the value was pulled from.
-#'      :param dict kwargs': Field-specific keyword arguments.
-#'      :raise ValidationError: In case of formatting or validation failure.
-#'      :return: The serialized value
-#'     }
-#'     \item{`deserialize_(x, ...)`}{
-#'      Deserialize value. Concrete :class:`Field` classes should implement this method.
-#'      :param value: The value to be deserialized.
-#'      :param str attr: The attribute/key in `data` to be deserialized.
-#'      :param dict data: The raw input data passed to the `Schema.load`.
-#'      :param dict kwargs': Field-specific keyword arguments.
-#'      :raise ValidationError: In case of formatting or validation failure.
-#'      :return: The deserialized value.
-#'      .. versionchanged:: 3.0.0
-#'          Add `**kwargs` parameters
-#'      .. versionchanged:: 2.0.0
-#'          Added `attr` and `data` parameters.
-#'     }
-#'     \item{`get_value(x, ...)`}{
-#'      Return the value for a given key from an object.
-#'      :param object obj: The object to get the value from
-#'      :param str attr: The attribute/key in `obj` to get the value from.
-#'      :param callable accessor: A callable used to retrieve the value of `attr` from
-#'       the object `obj`. Defaults to `marshmallow.utils.get_value`.
-#'     }
-#'     \item{`validate_(x, ...)`}{
-#'      Perform validation on `value`. Raise a :exc:`ValidationError` if validation
-#'      does not succeed.
-#'     }
-#'     \item{`validate_missing_(x, ...)`}{
-#'      Validate missing values. Raise a :exc:`ValidationError` if
-#'      `value` should be considered missing.
-#'     }
-#'     \item{`fail(x, ...)`}{
-#'      A helper method that simply raises a `ValidationError`.
-#'     } 
-#'   }
-#'
-#' @format NULL
-#' @usage NULL
 #' @examples
 #' x <- puft_fields$field()
 #' x
@@ -112,31 +19,76 @@
 #' z$deserialize("foo")
 #' z$deserialize(puft_fields$missing())
 Field <- R6::R6Class(
-  "Field",
+  classname = "Field",
+  inherit = FieldABC,
   public = list(
+    #' @field class_name (character) xxx
     class_name = "Field",
 
     # Some fields, such as Method fields and Function fields, are not expected
     #  to exist as attributes on the objects to serialize. Set this to FALSE
     #  for those fields
+    #' @field CHECK_ATTRIBUTE (logical) default: `TRUE`
     CHECK_ATTRIBUTE = TRUE,
 
     # Used for sorting
+    #' @field creation_index (integer) xxx
     creation_index = 0,
     
+    #' @field default a class, default: `Missing`
     default = NULL,
+    #' @field attribute (character) xxx
     attribute = NULL,
+    #' @field data_key (character) xxx
     data_key = NULL,
+    #' @field validate xxx
     validate = NULL,
+    #' @field required (logical) xxx
     required = NULL,
+    #' @field allow_none (logical) xxx
     allow_none = NULL,
+    #' @field load_only (logical) xxx
     load_only = NULL,
+    #' @field dump_only (logical) xxx
     dump_only = NULL,
+    #' @field missing (logical) xxx
     missing = NULL,
+    #' @field metadata Extra arguments to be stored as metadata.
     metadata = NULL,
+    #' @field error_messages (list) xxx
     error_messages = list(),
+    #' @field validators (list) xxx
     validators = list(),
 
+    #' @description Create a new Field object
+    #' @param default If set, this value will be used during serialization if 
+    #' the input value is missing. If not set, the field will be excluded from
+    #' the serialized output if the input value is missing. May be a value or 
+    #' a callable.
+    #' @param attribute The name of the key to get the value from when 
+    #' deserializing. If `None`, assumes the key has the same name as the 
+    #' field.
+    #' @param data_key The name of the key to get the value from when 
+    #' deserializing. If `None`, assumes the key has the same name as the field.
+    #' @param validate Validator or collection of validators that 
+    #' are called during deserialization. Validator takes a field's input 
+    #' value as its only parameter and returns a boolean. If it returns `FALSE`, 
+    #' an `ValidationError` is raised.
+    #' @param required  Raise a `ValidationError` if the field value
+    #' is not supplied during deserialization.
+    #' @param allow_none  Set this to `TRUE` if `None` should be considered a 
+    #' valid value during validation/deserialization. If `missing=NULL` 
+    #' and `allow_none` is unset, will default to `TRUE`. Otherwise, the 
+    #' default is `FALSE`.
+    #' @param load_only If `TRUE` skip this field during serialization, 
+    #' otherwise its value will be present in the serialized data.
+    #' @param dump_only If `TRUE` skip this field during deserialization, 
+    #' otherwise its value will be present in the deserialized object. In the 
+    #' context of an HTTP API, this effectively marks the field as "read-only".
+    #' @param missing  Default deserialization value for the field if the field 
+    #' is not found in the input data. May be a value or a callable.
+    #' @param error_messages Overrides for `Field.default_error_messages`.
+    #' @return A new `Field` object
     initialize = function(
       default=miss_ing, attribute=NULL, data_key=NULL,
       validate=NULL, required=FALSE, allow_none=NULL, load_only=FALSE,
@@ -190,6 +142,9 @@ Field <- R6::R6Class(
       self$error_messages = c(err_messages, self$error_messages_)
     },
 
+    #' @description print method for Field objects
+    #' @param x self
+    #' @param ... ignored
     print = function(x, ...) {
       cat(glue::glue('<fields.{self$class_name}>'), sep = "\n  ")
       cat(glue::glue('default={self$default$class_name}
@@ -203,6 +158,15 @@ Field <- R6::R6Class(
           error_messages={print_err_mssgs(self$error_messages %||% "none")}'), sep = "\n  ")
     },
 
+    #' @description Return the value for a given key from an object.
+    #' @param obj The object to get the value from
+    #' @param attr The attribute/key in `obj` to get the value from.
+    #' @param accessor (callback) A callable used to retrieve the value of `attr`
+    #' @param default If set, this value will be used during serialization if 
+    #' the input value is missing. If not set, the field will be excluded from
+    #' the serialized output if the input value is missing. May be a value or 
+    #' a callable.
+    #' from the object `obj`. Defaults to `marshmallow.utils.get_value`.
     get_value = function(obj, attr, accessor=NULL, default=miss_ing) {
       # NOTE: Use getattr instead of direct attribute access here so that
       # subclasses aren't required to define `attribute` member
@@ -213,6 +177,9 @@ Field <- R6::R6Class(
       accessor_func(obj, check_key, default)
     },
 
+    #' @description Perform validation on `value`. Raise a `ValidationError`
+    #' if validation does not succeed.
+    #' @param value a value
     validate_ = function(value) {
       # errors = list()
       # kwargs = {}
@@ -238,6 +205,9 @@ Field <- R6::R6Class(
       #     raise ValidationError(errors, **kwargs)
     },
 
+    #' @description A helper method that simply raises a
+    #' `ValidationError`
+    #' @param key a key
     fail = function(key) {
       msg <- self$error_messages[[key]]
       if (is.null(msg)) {
@@ -247,6 +217,9 @@ Field <- R6::R6Class(
       stop("ValidationError: ", msg)
     },
 
+    #' @description Validate missing values. Raise a `ValidationError`
+    #' if `value` should be considered missing.
+    #' @param value a value
     validate_missing_ = function(value) {
       if (inherits(value, "Missing")) {
         if (!is.null(self$required) && self$required) self$fail('required')
@@ -258,6 +231,14 @@ Field <- R6::R6Class(
       }
     },
 
+    #' @description Pulls the value for the given key from the object,
+    #' applies the field's formatting and returns the result.
+    #' @param attr (character) The attribute or key to get from the object.
+    #' @param obj (character) The object to pull the key from.
+    #' @param accessor (callback) Function used to pull values from `obj`.
+    #' @details raise ValidationError: In case of formatting problem
+    #' @return xxxx
+    # kwargs: Field-specific keyword arguments.
     serialize = function(attr, obj, accessor=NULL) {
       if (self$CHECK_ATTRIBUTE) {
         value = self$get_value(obj, attr, accessor = accessor)
@@ -273,6 +254,13 @@ Field <- R6::R6Class(
       self$serialize_(value, attr, obj)
     },
 
+    #' @description Deserialize `value`.
+    #' @param value The value to be deserialized.
+    #' @param attr (character) The attribute/key in `data` to be deserialized.
+    #' @param data (list) The raw input data passed to the `Schema.load`.
+    #' @details raise ValidationError: If an invalid value is passed or if a
+    #' required value is missing.
+    # kwargs (list) Field-specific keyword arguments.
     deserialize = function(value, attr=NULL, data=NULL) {
       # Validate required fields, deserialize, then validate deserialized value
       self$validate_missing_(value)
@@ -287,34 +275,52 @@ Field <- R6::R6Class(
       return(output)
     },
 
-    # # Methods for concrete classes to override.
-    # def _bind_to_schema(self, field_name, schema):
-    #     """Update field with values from its parent schema. Called by
-    #         :meth:`_bind_field<marshmallow.Schema._bind_field>`.
-    #     :param str field_name: Field name set in schema.
-    #     :param Schema schema: Parent schema.
-    #     """
-    #     self$parent = self$parent or schema
-    #     self$name = self$name or field_name
+    # Methods for concrete classes to override.
+    
+    #' @description Update field with values from its parent schema.
+    #' @param field_name (character) Field name set in schema.
+    #' @param schema Parent schema.
+    bind_to_schema = function(field_name, schema) {
+      self$parent = self$parent %||% schema
+      self$name = self$name %||% field_name
+    },
 
+    #' @description Serializes `value` to a basic Python datatype. Noop by
+    #' default. Concrete :class:`Field` classes should implement this method.
+    #' @param value The value to be deserialized.
+    #' @param attr (character) The attribute/key in `data` to be deserialized.
+    #' @param obj (character) The object to pull the key from.
+    #' @details raise ValidationError: In case of formatting or validation
+    #' failure.
+    #' @return The serialized value
+    # kwargs': Field-specific keyword arguments.
     serialize_ = function(value, attr = NULL, obj = NULL) return(value),
-    deserialize_ = function(self, value, attr, data) return(value)
 
-    # # Properties
-    # @property
-    # def context(self):
-    #     """The context dictionary for the parent :class:`Schema`."""
-    #     return self$parent.context
+    #' @description Deserialize value. Concrete :class:`Field` classes should implement this method.
+    #' @param value The value to be deserialized.
+    #' @param attr (character) The attribute/key in `data` to be deserialized.
+    #' @param data (list) The raw input data passed to the `Schema.load`.
+    #' @details raise ValidationError: In case of formatting or validation failure.
+    #' @return The deserialized value
+    # kwargs: Field-specific keyword arguments.
+    deserialize_ = function(value, attr, data) return(value),
 
-    # @property
-    # def root(self):
-    #     """Reference to the `Schema` that this field belongs to even if it is buried in a `List`.
-    #     Return `None` for unbound fields.
-    #     """
-    #     ret = self
-    #     while hasattr(ret, 'parent') and ret.parent:
-    #         ret = ret.parent
-    #     return ret if isinstance(ret, SchemaABC) else None
+    # Properties
+    #' @description The context dictionary for the parent `Schema`
+    context = function() {
+      self$parent$context
+    },
+
+    #' @description Reference to the `Schema` that this field belongs
+    #' to even if it is buried in a `List`
+    #' @return `None` for unbound fields
+    root = function() {
+      ret <- self
+      while (!is.null(ret$parent)) {
+        ret <- ret$parent
+      }
+      if (inherits(ret, 'SchemaABC')) ret else NULL
+    }
   )
 )
 

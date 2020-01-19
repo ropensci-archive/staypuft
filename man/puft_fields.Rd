@@ -21,7 +21,7 @@ types of fields:
 \item \code{Integer}
 \item \code{Boolean}
 \item \code{Any}
-\item more coming soon ...
+\item more coming soon
 }
 }
 \examples{

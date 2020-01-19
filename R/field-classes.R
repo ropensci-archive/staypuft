@@ -204,3 +204,76 @@ Any <- R6::R6Class("Any",
     }
   )
 )
+
+Nested <- R6::R6Class("Nested",
+  inherit = Field,
+  public = list(
+    class_name = "Nested",
+    nested = NULL,
+    only = NULL,
+    exclude = NULL,
+    many = NULL,
+    unknown = NULL,
+    schema_ = NULL,
+
+    initialize = function(nested, default = miss_ing, exclude = NULL, 
+      only = NULL, many = FALSE, unknown = NULL) {
+
+      super$initialize(...)
+      if (!is.null(only) && something) stop("'only' should be a vector of strings")
+      if (!is.null(exclude) && something) stop("'exclude' should be a vector of strings")
+      self$nested = nested
+      self$only = only
+      self$exclude = exclude
+      self$many = many
+      self$unknown = unknown
+    },
+    error_messages_ = list(
+      type = 'Invalid type.'
+    ),
+    schema = function() {
+      if (is.null(self$schema_)) {
+        # inherit context from parent
+        context <- self$parent$context %||% list()
+        if (inherits(self$nested, "SchemaABC")) {
+          self$schema_ = self$nested
+          self$schema_$context$update(context)
+        } else {
+          if (inherits(self$nested, type) && issubclass(self$nested, SchemaABC)) {
+            schema_class = self.nested
+          } else if (!inherits(self$nested, "character")) {
+
+          } else if (self$nested == "self") {
+
+          } else {
+            schema_class = class_registry$get_class(self$nested)
+          }
+        }
+      }
+    },
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      if (is.null(value)) return(NULL)
+      if (value %in% self$truthy) return(TRUE)
+      if (value %in% self$falsy) return(FALSE)
+      return(as.logical(value))
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      if (length(self$truthy) == 0 || 
+        all(is.na(self$truthy)) || 
+        is.null(self$truthy)
+      ) {
+        return(as.logical(value))
+      } else {
+        if (value %in% self$truthy) return(TRUE)
+        if (value %in% self$falsy) return(FALSE)
+      }
+      super$fail("invalid")
+    }
+  )
+)
+
+
+
+
+
+
