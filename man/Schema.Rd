@@ -43,6 +43,32 @@ z <- Schema$new("MySchema",
 )
 x <- list(name = "Jane Doe", title = "hello world")
 z$load(x, as_df = TRUE)
+
+# list of lists
+z <- Schema$new("MySchema",
+  name = puft_fields$character(),
+  title = puft_fields$character()
+)
+x <- list(
+  list(name = "Jane Doe", title = "hello world"),
+  list(name = "Alice Water", title = "bye mars")
+)
+z$load(x, many = TRUE)
+# z$load(x, many = FALSE)
+
+# data.frame's
+x <- data.frame(name = "jill", title = "boss", stringsAsFactors = FALSE)
+x2 <- data.frame(name = c("jill", "jane"), title = c("boss", "ceo"),
+  stringsAsFactors = FALSE)
+x2 <- data.frame(name = c("jill", "jane"), title = c("boss", "ceo"),
+  stringsAsFactors = FALSE)
+z <- Schema$new("FooBar",
+  name = puft_fields$character(),
+  title = puft_fields$character()
+)
+z$load_df(x)
+z$load_df(x2)
+z$load_df(x2, many = TRUE, simplifyVector = FALSE)
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -62,6 +88,7 @@ z$load(x, as_df = TRUE)
 \item \href{#method-dump_json}{\code{Schema$dump_json()}}
 \item \href{#method-load}{\code{Schema$load()}}
 \item \href{#method-load_json}{\code{Schema$load_json()}}
+\item \href{#method-load_df}{\code{Schema$load_df()}}
 \item \href{#method-clone}{\code{Schema$clone()}}
 }
 }
@@ -107,7 +134,7 @@ print method for \code{Schema} objects
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump"></a>}}
 \subsection{Method \code{dump()}}{
-Convert object to a list
+Convert various objects to a list
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Schema$dump(x)}\if{html}{\out{</div>}}
 }
@@ -126,7 +153,7 @@ list
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump_json"></a>}}
 \subsection{Method \code{dump_json()}}{
-Convert object to JSON
+Same as \code{dump()}, but returns JSON
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Schema$dump_json(x, ...)}\if{html}{\out{</div>}}
 }
@@ -151,7 +178,7 @@ Load data
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Schema$load(
   data,
-  many = NULL,
+  many = FALSE,
   partial = FALSE,
   unknown = "raise",
   as_df = FALSE
@@ -163,7 +190,8 @@ Load data
 \describe{
 \item{\code{data}}{a named list}
 
-\item{\code{many}}{(logical) not implemented yet}
+\item{\code{many}}{(logical) Should be set to \code{TRUE} if \code{obj} is a list of
+lists. default: \code{FALSE}}
 
 \item{\code{partial}}{(logical) not implemented yet}
 
@@ -181,22 +209,59 @@ xxxx
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load_json"></a>}}
 \subsection{Method \code{load_json()}}{
-Convert to object from JSON
+Same as \code{load()}, but takes JSON as input
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$load_json(x, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$load_json(data, many = FALSE, partial = FALSE, unknown = "raise", ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{input}
+\item{\code{data}}{a named list}
+
+\item{\code{many}}{(logical) Should be set to \code{TRUE} if \code{obj} is a list of
+lists. default: \code{FALSE}}
+
+\item{\code{partial}}{(logical) not implemented yet}
+
+\item{\code{unknown}}{(character) one or "raise", "exclude", or "include".
+default: "raise"}
 
 \item{\code{...}}{additional params passed to \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON()}}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-JSON (character)
+a list
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-load_df"></a>}}
+\subsection{Method \code{load_df()}}{
+Same as \code{load()}, but takes a data.frame as input
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Schema$load_df(data, many = FALSE, partial = FALSE, unknown = "raise", ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data}}{a data.frame}
+
+\item{\code{many}}{(logical) Should be set to \code{TRUE} if \code{obj} is a list of
+lists. default: \code{FALSE}}
+
+\item{\code{partial}}{(logical) not implemented yet}
+
+\item{\code{unknown}}{(character) one or "raise", "exclude", or "include".
+default: "raise"}
+
+\item{\code{...}}{additional params passed to \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON()}}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list
 }
 }
 \if{html}{\out{<hr>}}

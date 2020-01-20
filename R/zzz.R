@@ -22,3 +22,12 @@ chek_for_pkg <- function(x) {
     invisible(TRUE)
   }
 }
+# in a list, do all slots have names?
+# has_names(x = list())
+# has_names(x = list(a = 5, b = 6))
+# has_names(x = list(a = 5, 6))
+has_names <- function(x) {
+  stopifnot(is.list(x))
+  if (length(x) == 0) return(TRUE)
+  length(Filter(nzchar, names(x))) == length(x)
+}
