@@ -4,7 +4,7 @@
 \name{staypuft-package}
 \alias{staypuft-package}
 \alias{staypuft}
-\title{Convert Complex Objects to and from R Data Structures}
+\title{staypuft}
 \description{
 Convert Complex Objects to and from R Data Structures
 }

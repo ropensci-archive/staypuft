@@ -94,6 +94,7 @@ z$load_df(x2, many = TRUE, simplifyVector = FALSE)
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Schema} object
 \subsection{Usage}{
@@ -115,6 +116,7 @@ A new \code{Schema} object
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 print method for \code{Schema} objects
 \subsection{Usage}{
@@ -133,6 +135,7 @@ print method for \code{Schema} objects
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump"></a>}}
+\if{latex}{\out{\hypertarget{method-dump}{}}}
 \subsection{Method \code{dump()}}{
 Convert various objects to a list
 \subsection{Usage}{
@@ -152,6 +155,7 @@ list
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump_json"></a>}}
+\if{latex}{\out{\hypertarget{method-dump_json}{}}}
 \subsection{Method \code{dump_json()}}{
 Same as \code{dump()}, but returns JSON
 \subsection{Usage}{
@@ -173,6 +177,7 @@ JSON (character)
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load"></a>}}
+\if{latex}{\out{\hypertarget{method-load}{}}}
 \subsection{Method \code{load()}}{
 Load data
 \subsection{Usage}{
@@ -208,6 +213,7 @@ xxxx
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load_json"></a>}}
+\if{latex}{\out{\hypertarget{method-load_json}{}}}
 \subsection{Method \code{load_json()}}{
 Same as \code{load()}, but takes JSON as input
 \subsection{Usage}{
@@ -237,6 +243,7 @@ a list
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load_df"></a>}}
+\if{latex}{\out{\hypertarget{method-load_df}{}}}
 \subsection{Method \code{load_df()}}{
 Same as \code{load()}, but takes a data.frame as input
 \subsection{Usage}{
@@ -266,6 +273,7 @@ a list
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

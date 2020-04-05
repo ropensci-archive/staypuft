@@ -25,7 +25,7 @@ Imports:
 Suggests:
     testthat,
     tibble
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 X-schema.org-applicationCategory: Data
 X-schema.org-keywords: data, types, validation, serlialization, schema
 X-schema.org-isPartOf: https://ropensci.org

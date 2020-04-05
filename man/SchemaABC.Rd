@@ -29,6 +29,7 @@ x$load_json()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump"></a>}}
+\if{latex}{\out{\hypertarget{method-dump}{}}}
 \subsection{Method \code{dump()}}{
 dump fun: to be replaced by child class
 \subsection{Usage}{
@@ -38,6 +39,7 @@ dump fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dump_json"></a>}}
+\if{latex}{\out{\hypertarget{method-dump_json}{}}}
 \subsection{Method \code{dump_json()}}{
 dump_json fun: to be replaced by child class
 \subsection{Usage}{
@@ -47,6 +49,7 @@ dump_json fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load"></a>}}
+\if{latex}{\out{\hypertarget{method-load}{}}}
 \subsection{Method \code{load()}}{
 load fun: to be replaced by child class
 \subsection{Usage}{
@@ -56,6 +59,7 @@ load fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-load_json"></a>}}
+\if{latex}{\out{\hypertarget{method-load_json}{}}}
 \subsection{Method \code{load_json()}}{
 load_json fun: to be replaced by child class
 \subsection{Usage}{
@@ -65,6 +69,7 @@ load_json fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

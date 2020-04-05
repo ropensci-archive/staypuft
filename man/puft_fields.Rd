@@ -4,7 +4,9 @@
 \name{puft_fields}
 \alias{puft_fields}
 \title{staypuft fields}
-\format{An object of class \code{list} of length 8.}
+\format{
+An object of class \code{list} of length 8.
+}
 \usage{
 puft_fields
 }

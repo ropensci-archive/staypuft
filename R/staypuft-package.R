@@ -1,5 +1,5 @@
-#' Convert Complex Objects to and from R Data Structures
-#'
+#' @title staypuft
+#' @description Convert Complex Objects to and from R Data Structures
 #' @name staypuft-package
 #' @importFrom R6 R6Class
 #' @importFrom glue glue

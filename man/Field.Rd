@@ -89,6 +89,7 @@ z$deserialize(puft_fields$missing())
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new Field object
 \subsection{Usage}{
@@ -154,6 +155,7 @@ A new \code{Field} object
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
 \subsection{Method \code{print()}}{
 print method for Field objects
 \subsection{Usage}{
@@ -172,6 +174,7 @@ print method for Field objects
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_value"></a>}}
+\if{latex}{\out{\hypertarget{method-get_value}{}}}
 \subsection{Method \code{get_value()}}{
 Return the value for a given key from an object.
 \subsection{Usage}{
@@ -198,6 +201,7 @@ from the object \code{obj}. Defaults to \code{marshmallow.utils.get_value}.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate_"></a>}}
+\if{latex}{\out{\hypertarget{method-validate_}{}}}
 \subsection{Method \code{validate_()}}{
 Perform validation on \code{value}. Raise a \code{ValidationError}
 if validation does not succeed.
@@ -215,6 +219,7 @@ if validation does not succeed.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-fail"></a>}}
+\if{latex}{\out{\hypertarget{method-fail}{}}}
 \subsection{Method \code{fail()}}{
 A helper method that simply raises a
 \code{ValidationError}
@@ -232,6 +237,7 @@ A helper method that simply raises a
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate_missing_"></a>}}
+\if{latex}{\out{\hypertarget{method-validate_missing_}{}}}
 \subsection{Method \code{validate_missing_()}}{
 Validate missing values. Raise a \code{ValidationError}
 if \code{value} should be considered missing.
@@ -249,6 +255,7 @@ if \code{value} should be considered missing.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-serialize"></a>}}
+\if{latex}{\out{\hypertarget{method-serialize}{}}}
 \subsection{Method \code{serialize()}}{
 Pulls the value for the given key from the object,
 applies the field's formatting and returns the result.
@@ -277,6 +284,7 @@ xxxx
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-deserialize"></a>}}
+\if{latex}{\out{\hypertarget{method-deserialize}{}}}
 \subsection{Method \code{deserialize()}}{
 Deserialize \code{value}.
 \subsection{Usage}{
@@ -302,6 +310,7 @@ required value is missing.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-bind_to_schema"></a>}}
+\if{latex}{\out{\hypertarget{method-bind_to_schema}{}}}
 \subsection{Method \code{bind_to_schema()}}{
 Update field with values from its parent schema.
 \subsection{Usage}{
@@ -320,6 +329,7 @@ Update field with values from its parent schema.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-serialize_"></a>}}
+\if{latex}{\out{\hypertarget{method-serialize_}{}}}
 \subsection{Method \code{serialize_()}}{
 Serializes \code{value} to a basic Python datatype. Noop by
 default. Concrete :class:\code{Field} classes should implement this method.
@@ -349,6 +359,7 @@ The serialized value
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-deserialize_"></a>}}
+\if{latex}{\out{\hypertarget{method-deserialize_}{}}}
 \subsection{Method \code{deserialize_()}}{
 Deserialize value. Concrete :class:\code{Field} classes should implement this method.
 \subsection{Usage}{
@@ -376,6 +387,7 @@ The deserialized value
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-context"></a>}}
+\if{latex}{\out{\hypertarget{method-context}{}}}
 \subsection{Method \code{context()}}{
 The context dictionary for the parent \code{Schema}
 \subsection{Usage}{
@@ -385,6 +397,7 @@ The context dictionary for the parent \code{Schema}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-root"></a>}}
+\if{latex}{\out{\hypertarget{method-root}{}}}
 \subsection{Method \code{root()}}{
 Reference to the \code{Schema} that this field belongs
 to even if it is buried in a \code{List}
@@ -398,6 +411,7 @@ to even if it is buried in a \code{List}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

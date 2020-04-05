@@ -38,6 +38,7 @@ x$deserialize_()
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-serialize"></a>}}
+\if{latex}{\out{\hypertarget{method-serialize}{}}}
 \subsection{Method \code{serialize()}}{
 serialize fun: to be replaced by child class
 \subsection{Usage}{
@@ -47,6 +48,7 @@ serialize fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-deserialize"></a>}}
+\if{latex}{\out{\hypertarget{method-deserialize}{}}}
 \subsection{Method \code{deserialize()}}{
 deserialize fun: to be replaced by child class
 \subsection{Usage}{
@@ -56,6 +58,7 @@ deserialize fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-serialize_"></a>}}
+\if{latex}{\out{\hypertarget{method-serialize_}{}}}
 \subsection{Method \code{serialize_()}}{
 serialize_ fun: to be replaced by child class
 \subsection{Usage}{
@@ -65,6 +68,7 @@ serialize_ fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-deserialize_"></a>}}
+\if{latex}{\out{\hypertarget{method-deserialize_}{}}}
 \subsection{Method \code{deserialize_()}}{
 deserialize_ fun: to be replaced by child class
 \subsection{Usage}{
@@ -74,6 +78,7 @@ deserialize_ fun: to be replaced by child class
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
