@@ -213,7 +213,7 @@ Schema <- R6::R6Class("Schema",
     load_df = function(data, many = FALSE, partial = FALSE, unknown = "raise",
       ...) {
 
-      self$load_json(jsonlite::toJSON(x), many = many, partial = partial,
+      self$load_json(jsonlite::toJSON(data), many = many, partial = partial,
         unknown = unknown, ...)
     }
   ),

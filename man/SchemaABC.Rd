@@ -10,10 +10,10 @@ Abstract base class from which all Schemas inherit
 \dontrun{
 x <- SchemaABC$new()
 x
-x$dump()
-x$dump_json()
-x$load()
-x$load_json()
+# x$dump()
+# x$dump_json()
+# x$load()
+# x$load_json()
 }
 }
 \keyword{internal}

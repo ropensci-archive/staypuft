@@ -1,13 +1,14 @@
 #' @title FieldABC
 #' @description Abstract base class from which all Field classes inherit
+#' @export
 #' @keywords internal
 #' @examples \dontrun{
 #' x <- FieldABC$new()
 #' x
-#' x$serialize()
-#' x$deserialize()
-#' x$serialize_()
-#' x$deserialize_()
+#' # x$serialize()
+#' # x$deserialize()
+#' # x$serialize_()
+#' # x$deserialize_()
 #' }
 FieldABC <- R6::R6Class("FieldABC",
   public = list(
@@ -33,14 +34,15 @@ FieldABC <- R6::R6Class("FieldABC",
 
 #' @title SchemaABC
 #' @description Abstract base class from which all Schemas inherit
+#' @export
 #' @keywords internal
 #' @examples \dontrun{
 #' x <- SchemaABC$new()
 #' x
-#' x$dump()
-#' x$dump_json()
-#' x$load()
-#' x$load_json()
+#' # x$dump()
+#' # x$dump_json()
+#' # x$load()
+#' # x$load_json()
 #' }
 SchemaABC <- R6::R6Class("SchemaABC",
   public = list(

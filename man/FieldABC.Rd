@@ -10,10 +10,10 @@ Abstract base class from which all Field classes inherit
 \dontrun{
 x <- FieldABC$new()
 x
-x$serialize()
-x$deserialize()
-x$serialize_()
-x$deserialize_()
+# x$serialize()
+# x$deserialize()
+# x$serialize_()
+# x$deserialize_()
 }
 }
 \keyword{internal}
