@@ -7,6 +7,12 @@
 
 `staypuft` is a port of Python's [marshmallow][] for converting objects to and from R data structures 
 
+Main `Schema` methods:
+- `load`: 'deserialize', or validate and deserialize an input R data structure to an object
+- `dump`: 'serialize', or convert any input to R data structures
+- `load_json`: same as `load`, but accepts JSON
+- `dump_json`: same as `dump`, but returns JSON
+
 ## Installation
 
 
@@ -129,9 +135,10 @@ z$load(data = x)
 * Please [report any issues or bugs](https://github.com/ropensci/staypuft/issues).
 * License: MIT
 * Get citation information for `staypuft` in R doing `citation(package = 'staypuft')`
-* Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+* Please note that this project is released with a [Contributor Code of Conduct][coc]. By participating in this project you agree to abide by its terms.
 
 [![rofooter](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
 
 
 [marshmallow]: https://github.com/marshmallow-code/marshmallow/
+[coc]: https://github.com/ropensci/staypuft/blob/master/CODE_OF_CONDUCT.md
