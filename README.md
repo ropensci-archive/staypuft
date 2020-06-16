@@ -97,10 +97,11 @@ z <- Schema$new("MySchema",
   title = puft_fields$character(),
   num = puft_fields$integer(),
   uuid = puft_fields$uuid(),
+  date = puft_fields$date(),
   foo = puft_fields$boolean()
 )
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
-    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5",
+    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5", date = "2020/06/16",
     foo = TRUE)
 z$load(data = x)
 #> $name
@@ -114,6 +115,9 @@ z$load(data = x)
 #> 
 #> $uuid
 #> [1] "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
+#> 
+#> $date
+#> [1] "2020-06-16 UTC"
 #> 
 #> $foo
 #> [1] TRUE

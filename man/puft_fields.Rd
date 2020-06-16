@@ -5,7 +5,7 @@
 \alias{puft_fields}
 \title{staypuft fields}
 \format{
-An object of class \code{list} of length 8.
+An object of class \code{list} of length 9.
 }
 \usage{
 puft_fields
@@ -36,5 +36,6 @@ puft_fields$integer()
 puft_fields$uuid()
 puft_fields$boolean()
 puft_fields$any()
+puft_fields$date()
 }
 \keyword{datasets}

@@ -21,7 +21,8 @@ Language: en-US
 Imports:
     R6,
     glue,
-    jsonlite
+    jsonlite,
+    parsedate
 Suggests:
     testthat,
     tibble

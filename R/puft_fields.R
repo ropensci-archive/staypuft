@@ -24,6 +24,7 @@
 #' puft_fields$uuid()
 #' puft_fields$boolean()
 #' puft_fields$any()
+#' puft_fields$date()
 puft_fields <- list(
   field = function(...) Field$new(...),
   missing = function(...) Missing$new(...),
@@ -32,5 +33,6 @@ puft_fields <- list(
   integer = function(...) Integer$new(...),
   uuid = function(...) UUID$new(...),
   boolean = function(...) Boolean$new(...),
-  any = function(...) Any$new(...)
+  any = function(...) Any$new(...),
+  date = function(...) XDate$new(...)
 )

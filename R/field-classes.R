@@ -28,6 +28,47 @@ Character <- R6::R6Class("Character",
   )
 )
 
+XDate <- R6::R6Class("XDate",
+  inherit = Field,
+  public = list(
+    class_name = "XDate",
+    format = NULL,
+    default_format = "iso",
+    obj_type = "datetime",
+    initialize = function(format = NULL) {
+      super$initialize()
+      self$format <- format
+    },
+    error_messages_ = list(
+      invalid = 'Not a valid date.',
+      invalid_awareness = 'Not a valid {awareness} {obj_type}.',
+      format = '"{input}" cannot be formatted as a {obj_type}.'
+    ),
+    format_date = function(value) {
+      if (!is.numeric(value)) {
+        stop("value must be numeric")
+      }
+      as.numeric(value)
+    },
+    to_string = function(value) {
+      as.character(value)
+    },
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      if (is.null(value)) return(NULL)
+      # data_format <- self$format %||% self$default_format
+      parsedate::parse_date(value)
+    },
+    validated = function(value) {
+      x <- parsedate::parse_date(value)
+      if (is.na(x)) super$fail("invalid")
+      return(x)
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      self$validated(value)
+    }
+  )
+)
+
 UUID <- R6::R6Class("UUID",
   inherit = Character,
   public = list(

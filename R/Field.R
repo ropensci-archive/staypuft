@@ -197,7 +197,7 @@ Field <- R6::R6Class(
       for (i in seq_along(self$validators)) {
         b <- tryCatch(self$validators[[i]](value), error = function(e) e)
         if (inherits(b, "error")) {
-          stop(b$message)
+          stop(b$message, call.=FALSE)
         }
       }
 
@@ -214,7 +214,7 @@ Field <- R6::R6Class(
         msg <- glue::glue(MISSING_ERROR_MESSAGE)
         stop(msg)
       }
-      stop("ValidationError: ", msg)
+      stop("ValidationError: ", msg, call.=FALSE)
     },
 
     #' @description Validate missing values. Raise a `ValidationError`

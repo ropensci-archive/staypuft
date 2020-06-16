@@ -4,6 +4,7 @@
 #' @importFrom R6 R6Class
 #' @importFrom glue glue
 #' @importFrom jsonlite fromJSON toJSON
+#' @importFrom parsedate parse_date
 #' @aliases staypuft
 #' @docType package
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
