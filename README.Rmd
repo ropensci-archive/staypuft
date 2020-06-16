@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 `staypuft` is a port of Python's [marshmallow][] for converting objects to and from R data structures 
 
 Main `Schema` methods:
-- `load`: 'deserialize', or validate and deserialize an input R data structure to an object
-- `dump`: 'serialize', or convert any input to R data structures
+- `load`: 'deserialize', or validate and deserialize an input R data structure (e.g., list) to an object
+- `dump`: 'serialize', or convert any input (e.g., R6 class) to R data structures (e.g., list)
 - `load_json`: same as `load`, but accepts JSON
 - `dump_json`: same as `dump`, but returns JSON
 

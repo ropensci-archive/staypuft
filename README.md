@@ -8,8 +8,8 @@
 `staypuft` is a port of Python's [marshmallow][] for converting objects to and from R data structures 
 
 Main `Schema` methods:
-- `load`: 'deserialize', or validate and deserialize an input R data structure to an object
-- `dump`: 'serialize', or convert any input to R data structures
+- `load`: 'deserialize', or validate and deserialize an input R data structure (e.g., list) to an object
+- `dump`: 'serialize', or convert any input (e.g., R6 class) to R data structures (e.g., list)
 - `load_json`: same as `load`, but accepts JSON
 - `dump_json`: same as `dump`, but returns JSON
 
@@ -85,7 +85,7 @@ z$fields$num
 #> error_messages=required: 'Missing data for required field.'; null: 'Field may not be null.'; validator_failed: 'Invalid value.'; invalid: 'Not a valid integer.'
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
 z$load(data = x)
-#> Error in super$fail("invalid"): ValidationError: Not a valid integer.
+#> Error: ValidationError: Not a valid integer.
 ```
 
 another example
@@ -121,13 +121,13 @@ z$load(data = x)
 # invalid uuid
 x$uuid <- "foo-bar"
 z$load(data = x)
-#> Error in super$fail("invalid_uuid"): ValidationError: Not a valid UUID.
+#> Error: ValidationError: Not a valid UUID.
 
 # invalid boolean
 x$uuid <- "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
 x$foo <- "bar"
 z$load(data = x)
-#> Error in super$fail("invalid"): ValidationError: Not a valid boolean.
+#> Error: ValidationError: Not a valid boolean.
 ```
 
 ## Meta
