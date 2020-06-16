@@ -3,7 +3,7 @@
 
 
 [![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
-[![Build Status](https://travis-ci.com/ropensci/staypuft.svg?branch=master)](https://travis-ci.com/ropensci/staypuft)
+[![R-check](https://github.com/ropensci/staypuft/workflows/R-check/badge.svg)](https://github.com/ropensci/staypuft/actions/)
 
 `staypuft` is a port of Python's [marshmallow][] for converting objects to and from R data structures 
 
