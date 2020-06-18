@@ -334,7 +334,7 @@ Url <- R6::R6Class("Url",
       if (!all(scheme_chk)) 
         stop("1 or more schemes not in allowed set: ",
           paste0(schemes[!scheme_chk], collapse=", "))
-      
+
       function(x) {
         valid_chars <- rex::rex(except_some_of(".", "/", " ", "-"))
         re <- rex::rex(
@@ -359,6 +359,40 @@ Url <- R6::R6Class("Url",
         )
         # if (!grepl(re, x)) stop("bad URL")
         if (!grepl(re, x)) super$fail("invalid_url")
+      }
+    }
+  )
+)
+
+#' @title Email
+#' @description A validated email field. Validation occurs during both
+#' serialization and deserialization
+#' @export
+#' @keywords internal
+#' @examples
+#' z <- Schema$new("email", email = fields$email())
+#' z
+#' z$load(list(email = "blueberries@yahoo.com")) # good
+#' if (interactive()) z$load(list(email = 'foobar')) # bad
+Email <- R6::R6Class("Email",
+  inherit = Field,
+  public = list(
+    class_name = "Email",
+    error_messages_ = list(
+      invalid_email = 'Not a valid email address.'
+    ),
+    #' @description Create a new Email object
+    initialize = function(...) {
+      super$initialize(...)
+      self$validators <- c(
+        self$validators,
+        self$validate_email()
+      )
+    },
+    validate_email = function() {
+      function(x) {
+        chek_for_pkg("addressable")
+        if (!addressable::Address$new(x)$valid()) super$fail("invalid_email")
       }
     }
   )

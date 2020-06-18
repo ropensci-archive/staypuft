@@ -1,7 +1,7 @@
 Package: staypuft
 Title: Convert Complex Objects to and from R Data Structures
 Description: Convert complex objects to and from R data structures.
-Version: 0.0.1.92
+Version: 0.0.1.98
 Authors@R: c(
     person(given = "Scott",
            family = "Chamberlain",
@@ -28,7 +28,9 @@ Suggests:
     testthat,
     tibble,
     knitr,
-    rmarkdown
+    rmarkdown,
+    addressable
+Remotes: ropenscilabs/addressable@main
 RoxygenNote: 7.1.0
 X-schema.org-applicationCategory: Data
 X-schema.org-keywords: data, types, validation, serlialization, schema

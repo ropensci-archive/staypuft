@@ -14,6 +14,7 @@
 #' - [Date]
 #' - [Nested]
 #' - [Url]
+#' - [Email]
 #' - more coming soon
 #'
 #' @section Usage:
@@ -36,5 +37,6 @@ fields <- list(
   any = function(...) Any$new(...),
   date = function(...) XDate$new(...),
   nested = function(...) Nested$new(...),
-  url = function(...) Url$new(...)
+  url = function(...) Url$new(...),
+  email = function(...) Email$new(...)
 )
