@@ -13,19 +13,30 @@ fields
 \description{
 staypuft fields
 }
-\details{
-types of fields:
+\section{Types of fields}{
+
 \itemize{
-\item \code{Missing}
-\item \code{Character}
-\item \code{UUID}
-\item \code{Number}
-\item \code{Integer}
-\item \code{Boolean}
-\item \code{Any}
+\item \link{Missing}
+\item \link{Character}
+\item \link{UUID}
+\item \link{Number}
+\item \link{Integer}
+\item \link{Boolean}
+\item \link{Any}
+\item \link{Date}
+\item \link{Nested}
 \item more coming soon
 }
 }
+
+\section{Usage}{
+
+You can use any supported fields in the \code{fields} object.
+
+You can call the field like \code{fields$character()},
+or pass supported arguments like \code{fields$character(data_key = "foobar")}
+}
+
 \examples{
 fields
 fields$character()

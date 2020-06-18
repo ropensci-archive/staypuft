@@ -1,19 +1,26 @@
 #' staypuft fields
-#' 
+#'
 #' @export
 #' @name fields
-#' @details
-#' types of fields: 
-#' 
-#' - `Missing`
-#' - `Character`
-#' - `UUID`
-#' - `Number`
-#' - `Integer`
-#' - `Boolean`
-#' - `Any`
+#' @section Types of fields:
+#'
+#' - [Missing]
+#' - [Character]
+#' - [UUID]
+#' - [Number]
+#' - [Integer]
+#' - [Boolean]
+#' - [Any]
+#' - [Date]
+#' - [Nested]
 #' - more coming soon
-#' 
+#'
+#' @section Usage:
+#' You can use any supported fields in the `fields` object.
+#'
+#' You can call the field like `fields$character()`,
+#' or pass supported arguments like `fields$character(data_key = "foobar")`
+#'
 #' @examples
 #' fields
 #' fields$character()

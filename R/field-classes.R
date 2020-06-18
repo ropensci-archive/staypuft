@@ -1,3 +1,7 @@
+#' @title Missing
+#' @description Missing class
+#' @export
+#' @keywords internal
 Missing = R6::R6Class("Missing",
   public = list(
     class_name = "Missing",
@@ -9,6 +13,10 @@ Missing = R6::R6Class("Missing",
 )
 miss_ing = Missing$new()
 
+#' @title Character 
+#' @description A string field
+#' @export
+#' @keywords internal
 Character <- R6::R6Class("Character",
   inherit = Field,
   public = list(
@@ -28,13 +36,20 @@ Character <- R6::R6Class("Character",
   )
 )
 
-XDate <- R6::R6Class("XDate",
+#' @title Date 
+#' @description A formatted date string
+#' @export
+#' @keywords internal
+#' @note e.g., value: 2014-12-22T03:12:58.019077+00:00
+XDate <- R6::R6Class("Date",
   inherit = Field,
   public = list(
-    class_name = "XDate",
+    class_name = "Date",
     format = NULL,
     default_format = "iso",
     obj_type = "datetime",
+    #' @description Create a new Date object
+    #' @param @param format Either "rfc" (for RFC822) or "iso" (for ISO8601)
     initialize = function(format = NULL) {
       super$initialize()
       self$format <- format
@@ -69,6 +84,10 @@ XDate <- R6::R6Class("XDate",
   )
 )
 
+#' @title UUID 
+#' @description A UUID field
+#' @export
+#' @keywords internal
 UUID <- R6::R6Class("UUID",
   inherit = Character,
   public = list(
@@ -94,11 +113,18 @@ UUID <- R6::R6Class("UUID",
   )
 )
 
+#' @title Number 
+#' @description A Number field
+#' @export
+#' @keywords internal
 Number <- R6::R6Class("Number",
   inherit = Field,
   public = list(
     class_name = "Number",
     as_string = FALSE,
+    #' @description Create a new Integer object
+    #' @param as_string If `TRUE`, serialize to a string instead of
+    #' a `numeric` type
     initialize = function(..., as_string = FALSE) {
       super$initialize(...)
       self$as_string <- as_string
@@ -135,11 +161,18 @@ Number <- R6::R6Class("Number",
   )
 )
 
+#' @title Integer 
+#' @description A Integer field
+#' @export
+#' @keywords internal
 Integer <- R6::R6Class("Integer",
   inherit = Number,
   public = list(
     class_name = "Integer",
     strict = FALSE,
+    #' @description Create a new Integer object
+    #' @param strict If `TRUE`, only integer types are valid. Otherwise,
+    #' any value castable to `integer` is valid
     initialize = function(..., strict = FALSE) {
       super$initialize(...)
       self$strict <- strict
@@ -157,6 +190,10 @@ Integer <- R6::R6Class("Integer",
   )
 )
 
+#' @title Boolean 
+#' @description A boolean field
+#' @export
+#' @keywords internal
 Boolean <- R6::R6Class("Boolean",
   inherit = Field,
   public = list(
@@ -177,6 +214,12 @@ Boolean <- R6::R6Class("Boolean",
       '0', 0, 0.0,
       FALSE
     ),
+    #' @description Create a new Boolean object
+    #' @param truthy Values that will (de)serialize to `TRUE`. If an
+    #' empty set, any non-falsy value will deserialize to `TRUE`. If `NULL`,
+    #' xx will be used.
+    #' @param falsy Values that will (de)serialize to `FALSE`. If `NULL`,
+    #' xx will be used.
     initialize = function(..., truthy = NULL, falsy = NULL) {
       super$initialize(...)
       if (!is.null(truthy)) self$truthy <- c(self$truthy, truthy)
@@ -233,6 +276,10 @@ Boolean <- R6::R6Class("Boolean",
 #   )
 # )
 
+#' @title Any 
+#' @description A field that applies no formatting
+#' @export
+#' @keywords internal
 Any <- R6::R6Class("Any",
   inherit = Field,
   public = list(
@@ -246,8 +293,10 @@ Any <- R6::R6Class("Any",
   )
 )
 
-#' Nested
-#' @noRd
+#' @title Nested 
+#' @description  Nest a Schema inside a field
+#' @export
+#' @keywords internal
 #' @examples
 #' artist_schema <- Schema$new("ArtistSchema",
 #'   name = fields$character()
@@ -267,7 +316,16 @@ Nested <- R6::R6Class("Nested",
     many = FALSE,
     unknown = "raise",
     schema_ = NULL,
-
+    #' @description Create a new Nested object
+    #' @param nested The Schema class or class name (character)
+    #' to nest, or "self" to nest the `Schema` within itself
+    #' @param exclude A list or tuple of fields to exclude
+    #' @param only A list or tuple of fields to marshal. If `NULL`, all fields
+    #' are marshalled. This parameter takes precedence over `exclude`.
+    #' @param many Whether the field is a collection of objects.
+    #' @param unknown Whether to exclude, include, or raise an
+    #' error for unknown fields in the data. Use "raise", "exclude",
+    #' or "include"
     initialize = function(nested, default = miss_ing, exclude = NULL, 
       only = NULL, many = FALSE, unknown = "raise", ...) {
 
@@ -338,9 +396,3 @@ Nested <- R6::R6Class("Nested",
     }
   )
 )
-
-
-
-
-
-
