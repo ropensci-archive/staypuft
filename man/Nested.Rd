@@ -14,7 +14,7 @@ x <- Nested$new(artist_schema)
 x
 x$nested
 x$deserialize_(value = list(name = 6)) # good
-x$deserialize_(value = list(foobar = 6)) # bad
+if (interactive()) x$deserialize_(value = list(foobar = 6)) # bad
 }
 \keyword{internal}
 \section{Super classes}{

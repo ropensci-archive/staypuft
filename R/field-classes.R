@@ -305,7 +305,7 @@ Any <- R6::R6Class("Any",
 #' x
 #' x$nested
 #' x$deserialize_(value = list(name = 6)) # good
-#' x$deserialize_(value = list(foobar = 6)) # bad
+#' if (interactive()) x$deserialize_(value = list(foobar = 6)) # bad
 Nested <- R6::R6Class("Nested",
   inherit = Field,
   public = list(
