@@ -16,15 +16,7 @@
 #' 
 #' @examples
 #' fields
-#' fields$field()
-#' fields$missing()
 #' fields$character()
-#' fields$number()
-#' fields$integer()
-#' fields$uuid()
-#' fields$boolean()
-#' fields$any()
-#' fields$date()
 fields <- list(
   field = function(...) Field$new(...),
   missing = function(...) Missing$new(...),
