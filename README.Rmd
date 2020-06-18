@@ -30,7 +30,7 @@ remotes::install_github("ropensci/staypuft")
 library("staypuft")
 ```
 
-## hello world
+## example
 
 ```{r}
 z <- Schema$new("MySchema",
@@ -40,47 +40,6 @@ z <- Schema$new("MySchema",
 )
 z
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
-z$load(data = x)
-z$load(data = x, as_df = TRUE)
-z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
-```
-
-strict mode for integer
-
-```{r}
-z <- Schema$new("MySchema",
-  name = fields$character(),
-  title = fields$character(),
-  num = fields$integer(strict = TRUE)
-)
-z$fields$num
-x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
-z$load(data = x)
-```
-
-another example
-
-```{r}
-z <- Schema$new("MySchema",
-  name = fields$character(),
-  title = fields$character(),
-  num = fields$integer(),
-  uuid = fields$uuid(),
-  date = fields$date(),
-  foo = fields$boolean()
-)
-x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
-    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5", date = "2020/06/16",
-    foo = TRUE)
-z$load(data = x)
-
-# invalid uuid
-x$uuid <- "foo-bar"
-z$load(data = x)
-
-# invalid boolean
-x$uuid <- "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
-x$foo <- "bar"
 z$load(data = x)
 ```
 

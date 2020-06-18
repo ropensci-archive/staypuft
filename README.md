@@ -25,7 +25,7 @@ remotes::install_github("ropensci/staypuft")
 library("staypuft")
 ```
 
-## hello world
+## example
 
 
 ```r
@@ -47,91 +47,6 @@ z$load(data = x)
 #> 
 #> $num
 #> [1] 5.5
-z$load(data = x, as_df = TRUE)
-#> # A tibble: 1 x 3
-#>   name     title         num
-#>   <chr>    <chr>       <dbl>
-#> 1 Jane Doe Howdy doody   5.5
-z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
-#> $name
-#> [1] "Jane Doe"
-#> 
-#> $title
-#> [1] "Howdy doody"
-#> 
-#> $num
-#> [1] 5.5
-```
-
-strict mode for integer
-
-
-```r
-z <- Schema$new("MySchema",
-  name = fields$character(),
-  title = fields$character(),
-  num = fields$integer(strict = TRUE)
-)
-z$fields$num
-#> <fields.Integer>
-#> default=Missing
-#> attribute=none
-#> validate=none
-#> required=FALSE
-#> load_only=FALSE
-#> dump_only=FALSE
-#> missing=Missing
-#> allow_none=FALSE
-#> error_messages=required: 'Missing data for required field.'; null: 'Field may not be null.'; validator_failed: 'Invalid value.'; invalid: 'Not a valid integer.'
-x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5)
-z$load(data = x)
-#> Error: ValidationError: Not a valid integer.
-```
-
-another example
-
-
-```r
-z <- Schema$new("MySchema",
-  name = fields$character(),
-  title = fields$character(),
-  num = fields$integer(),
-  uuid = fields$uuid(),
-  date = fields$date(),
-  foo = fields$boolean()
-)
-x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
-    uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5", date = "2020/06/16",
-    foo = TRUE)
-z$load(data = x)
-#> $name
-#> [1] "Jane Doe"
-#> 
-#> $title
-#> [1] "Howdy doody"
-#> 
-#> $num
-#> [1] 5.5
-#> 
-#> $uuid
-#> [1] "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
-#> 
-#> $date
-#> [1] "2020-06-16 UTC"
-#> 
-#> $foo
-#> [1] TRUE
-
-# invalid uuid
-x$uuid <- "foo-bar"
-z$load(data = x)
-#> Error: ValidationError: Not a valid UUID.
-
-# invalid boolean
-x$uuid <- "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5"
-x$foo <- "bar"
-z$load(data = x)
-#> Error: ValidationError: Not a valid boolean.
 ```
 
 ## Meta
