@@ -1,7 +1,7 @@
 #' staypuft fields
 #' 
 #' @export
-#' @name puft_fields
+#' @name fields
 #' @details
 #' types of fields: 
 #' 
@@ -15,17 +15,18 @@
 #' - more coming soon
 #' 
 #' @examples
-#' puft_fields
-#' puft_fields$field()
-#' puft_fields$missing()
-#' puft_fields$character()
-#' puft_fields$number()
-#' puft_fields$integer()
-#' puft_fields$uuid()
-#' puft_fields$boolean()
-#' puft_fields$any()
-#' puft_fields$date()
-puft_fields <- list(
+#' fields
+#' fields$field()
+#' fields$missing()
+#' fields$character()
+#' fields$number()
+#' fields$integer()
+#' fields$uuid()
+#' fields$boolean()
+#' fields$any()
+#' fields$date()
+#' fields$nested()
+fields <- list(
   field = function(...) Field$new(...),
   missing = function(...) Missing$new(...),
   character = function(...) Character$new(...),
@@ -34,5 +35,6 @@ puft_fields <- list(
   uuid = function(...) UUID$new(...),
   boolean = function(...) Boolean$new(...),
   any = function(...) Any$new(...),
-  date = function(...) XDate$new(...)
+  date = function(...) XDate$new(...),
+  nested = function(...) Nested$new(...)
 )
