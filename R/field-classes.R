@@ -247,6 +247,7 @@ Any <- R6::R6Class("Any",
 )
 
 #' Nested
+#' @noRd
 #' @examples
 #' artist_schema <- Schema$new("ArtistSchema",
 #'   name = fields$character()

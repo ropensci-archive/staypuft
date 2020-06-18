@@ -25,7 +25,6 @@
 #' fields$boolean()
 #' fields$any()
 #' fields$date()
-#' fields$nested()
 fields <- list(
   field = function(...) Field$new(...),
   missing = function(...) Missing$new(...),

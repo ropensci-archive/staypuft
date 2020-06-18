@@ -37,6 +37,5 @@ fields$uuid()
 fields$boolean()
 fields$any()
 fields$date()
-fields$nested()
 }
 \keyword{datasets}

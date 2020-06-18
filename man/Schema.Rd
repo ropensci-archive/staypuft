@@ -96,7 +96,7 @@ album_schema$dump(albums, many=TRUE)
 album_schema$load(albums, many=TRUE)
 ## bad
 album$artist <- list(stuff = "things")
-album_schema$load(album)
+if (interactive()) album_schema$load(album)
 
 # Deserialize/load and create object with post_load
 z <- Schema$new("ArtistSchema",
