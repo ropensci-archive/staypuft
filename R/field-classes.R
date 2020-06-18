@@ -249,32 +249,120 @@ Boolean <- R6::R6Class("Boolean",
   )
 )
 
-# Url <- R6::R6Class("Url",
-#   inherit = Character,
-#   public = list(
-#     class_name = "Url",
-#     relative = NULL,
-#     require_tld = NULL,
-#     error_messages_ = list(
-#       invalid_uuid = 'Not a valid URL.'
-#     ),
-#     initialize = function(..., relative = FALSE, schemes = NULL, 
-#       require_tld = TRUE) {
+# validate_url <- function(relative = FALSE, schemes = NULL, require_tld = TRUE) {
+#   schemes_default <- c("http", "https", "ftp", "ftps")
+#   if (is.null(schemes)) schemes <- schemes_default
+#   scheme_chk <- schemes %in% schemes_default
+#   if (!all(scheme_chk)) 
+#     stop("1 or more schemes not in allowed set: ",
+#       paste0(schemes[!scheme_chk], collapse=", "))
+#   function(x) {
+#     valid_chars <- rex::rex(except_some_of(".", "/", " ", "-"))
+#     re <- rex::rex(
+#       start,
+#       # protocol identifier (optional) + //
+#       group(or(schemes), "://"),
+#       # group(list("http", maybe("s")) %or% list("ftp", maybe("s")), "://"),
+#       # user:pass authentication (optional)
+#       maybe(non_spaces,
+#         maybe(":", zero_or_more(non_space)),
+#         "@"),
+#       #host name
+#       group(zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
+#       #domain name
+#       zero_or_more(".", zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
+#       #TLD identifier
+#       group(".", valid_chars %>% at_least(2)),
+#       # server port number (optional)
+#       maybe(":", digit %>% between(2, 5)),
+#       # resource path (optional)
+#       maybe("/", non_space %>% zero_or_more()),
+#       end
+#     )
+#     # if (!grepl(re, x)) stop("bad URL")
+#     if (!grepl(re, x)) super$fail("invalid_url")
+#   }
+# }
 
-#       super$initialize(...)
-#       self$relative = relative
-#       self$require_tld = require_tld
-#       super$validators <- c(
-#         super$validators,
-#         validate$URL
-#       )
-#     },
-#     validated = function(value) {
-#       if (is.null(value)) return(NULL)
-#       validate_url()
-#     }
-#   )
-# )
+#' @title Url
+#' @description A validated URL field. Validation occurs during both
+#' serialization and deserialization
+#' @export
+#' @keywords internal
+#' @examples
+#' aschema <- Schema$new("aSchema",
+#'   url = fields$url()
+#' )
+#' aschema
+#' aschema$load(list(url = "https://ropensci.org/")) # good
+#' if (interactive()) aschema$load(list(url = 6)) # bad
+#' 
+#' sch <- Schema$new("anotherschema",
+#'   url = fields$url(schemes = c("https", "ftps"))
+#' )
+#' if (interactive()) sch$load(list(url = "http://google.com")) # bad
+Url <- R6::R6Class("Url",
+  inherit = Field,
+  public = list(
+    class_name = "Url",
+    relative = NULL,
+    require_tld = NULL,
+    error_messages_ = list(
+      invalid_url = 'Not a valid URL.'
+    ),
+    #' @description Create a new Url object
+    #' @param relative Whether to allow relative URLs. NOT WORKING YET
+    #' @param require_tld Whether to reject non-FQDN hostnames. NOT WORKING YET
+    #' @param schemes Valid schemes. By default `http`, `https`, `ftp`, and
+    #' `ftps` are allowed
+    initialize = function(..., relative = FALSE, schemes = NULL, 
+      require_tld = TRUE) {
+
+      super$initialize(...)
+      self$validators <- c(
+        self$validators,
+        self$validate_url(relative, schemes, require_tld)
+      )
+      self$relative = relative
+      self$require_tld = require_tld
+    },
+
+    validate_url = function(relative = FALSE, schemes = NULL, require_tld = TRUE) {
+      schemes_default <- c("http", "https", "ftp", "ftps")
+      if (is.null(schemes)) schemes <- schemes_default
+      scheme_chk <- schemes %in% schemes_default
+      if (!all(scheme_chk)) 
+        stop("1 or more schemes not in allowed set: ",
+          paste0(schemes[!scheme_chk], collapse=", "))
+      
+      function(x) {
+        valid_chars <- rex::rex(except_some_of(".", "/", " ", "-"))
+        re <- rex::rex(
+          start,
+          # protocol identifier (optional) + //
+          group(or(schemes), "://"),
+          # user:pass authentication (optional)
+          maybe(non_spaces,
+            maybe(":", zero_or_more(non_space)),
+            "@"),
+          #host name
+          group(zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
+          #domain name
+          zero_or_more(".", zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
+          #TLD identifier
+          group(".", at_least(valid_chars, 2)),
+          # server port number (optional)
+          maybe(":", between(digit, 2, 5)),
+          # resource path (optional)
+          maybe("/", zero_or_more(non_space)),
+          end
+        )
+        # if (!grepl(re, x)) stop("bad URL")
+        if (!grepl(re, x)) super$fail("invalid_url")
+      }
+    }
+  )
+)
 
 #' @title Any 
 #' @description A field that applies no formatting
@@ -396,3 +484,6 @@ Nested <- R6::R6Class("Nested",
     }
   )
 )
+
+# rex hack for R CMD CHECK
+rex::register_shortcuts("staypuft")

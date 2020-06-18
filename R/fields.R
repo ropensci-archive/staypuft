@@ -13,6 +13,7 @@
 #' - [Any]
 #' - [Date]
 #' - [Nested]
+#' - [Url]
 #' - more coming soon
 #'
 #' @section Usage:
@@ -34,5 +35,6 @@ fields <- list(
   boolean = function(...) Boolean$new(...),
   any = function(...) Any$new(...),
   date = function(...) XDate$new(...),
-  nested = function(...) Nested$new(...)
+  nested = function(...) Nested$new(...),
+  url = function(...) Url$new(...)
 )

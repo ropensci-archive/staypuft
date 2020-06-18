@@ -22,7 +22,8 @@ Imports:
     R6,
     glue,
     jsonlite,
-    parsedate
+    parsedate,
+    rex
 Suggests:
     testthat,
     tibble,

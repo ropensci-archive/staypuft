@@ -5,6 +5,7 @@
 #' @importFrom glue glue
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom parsedate parse_date
+#' @importFrom rex rex
 #' @aliases staypuft
 #' @docType package
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
