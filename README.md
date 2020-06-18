@@ -30,9 +30,9 @@ library("staypuft")
 
 ```r
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character(),
-  num = puft_fields$integer()
+  name = fields$character(),
+  title = fields$character(),
+  num = fields$integer()
 )
 z
 #> <schema: MySchema>
@@ -68,9 +68,9 @@ strict mode for integer
 
 ```r
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character(),
-  num = puft_fields$integer(strict = TRUE)
+  name = fields$character(),
+  title = fields$character(),
+  num = fields$integer(strict = TRUE)
 )
 z$fields$num
 #> <fields.Integer>
@@ -93,12 +93,12 @@ another example
 
 ```r
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character(),
-  num = puft_fields$integer(),
-  uuid = puft_fields$uuid(),
-  date = puft_fields$date(),
-  foo = puft_fields$boolean()
+  name = fields$character(),
+  title = fields$character(),
+  num = fields$integer(),
+  uuid = fields$uuid(),
+  date = fields$date(),
+  foo = fields$boolean()
 )
 x <- list(name = "Jane Doe", title = "Howdy doody", num = 5.5, 
     uuid = "9a5f6bba-4101-48e9-a7e3-b5ac456a04b5", date = "2020/06/16",
