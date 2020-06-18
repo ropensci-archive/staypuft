@@ -56,6 +56,7 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran(c("rcmdcheck", "tibble"))
+          remotes::install_github(c("ropenscilabs/addressable@main"))
         shell: Rscript {0}
 
       - name: Session info
