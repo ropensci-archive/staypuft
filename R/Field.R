@@ -8,16 +8,16 @@
 #' 
 #' @export
 #' @examples
-#' x <- puft_fields$field()
+#' x <- fields$field()
 #' x
 #' x$error_messages
 #' 
-#' z <- puft_fields$character()
+#' z <- fields$character()
 #' z
 #' z$error_messages
 #' z$serialize(attr = "foo", obj = list(foo = "bar"))
 #' z$deserialize("foo")
-#' z$deserialize(puft_fields$missing())
+#' z$deserialize(fields$missing())
 Field <- R6::R6Class(
   classname = "Field",
   inherit = FieldABC,
@@ -261,7 +261,7 @@ Field <- R6::R6Class(
     #' @details raise ValidationError: If an invalid value is passed or if a
     #' required value is missing.
     # kwargs (list) Field-specific keyword arguments.
-    deserialize = function(value, attr=NULL, data=NULL) {
+    deserialize = function(value, attr=NULL, data=NULL, ...) {
       # Validate required fields, deserialize, then validate deserialized value
       self$validate_missing_(value)
       if (inherits(value, "Missing")) {
@@ -270,7 +270,7 @@ Field <- R6::R6Class(
         if (is.function(miss)) miss() else miss
       }
       if (self$allow_none && is.null(value)) return(NULL)
-      output = self$deserialize_(value, attr, data)
+      output = self$deserialize_(value, attr, data, ...)
       self$validate_(output)
       return(output)
     },

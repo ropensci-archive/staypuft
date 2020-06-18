@@ -1,11 +1,27 @@
+schema_opts <- list(
+  fields = list(),
+  additional = list(),
+  exclude = list(),
+  dateformat = NULL,
+  datetimeformat = NULL,
+  render_module = NULL,
+  ordered = FALSE,
+  index_errors = TRUE,
+  include = list(),
+  load_only = list(),
+  dump_only = list(),
+  unknown = stop,
+  register = TRUE
+)
+
 #' @title Schema
 #' @description Base schema class with which to define custom schemas
 #'
 #' @export
 #' @examples
 #' z <- Schema$new("FooBar",
-#'   name = puft_fields$character(),
-#'   title = puft_fields$character()
+#'   name = fields$character(),
+#'   title = fields$character()
 #' )
 #' z
 #' z$fields
@@ -19,8 +35,8 @@
 #'
 #'
 #' z <- Schema$new("MySchema",
-#'   name = puft_fields$character(),
-#'   title = puft_fields$character()
+#'   name = fields$character(),
+#'   title = fields$character()
 #' )
 #' z
 #' x <- list(name = "Jane Doe", title = "Howdy doody")
@@ -34,16 +50,16 @@
 #'
 #' # as data.frame
 #' z <- Schema$new("MySchema",
-#'   name = puft_fields$character(),
-#'   title = puft_fields$character()
+#'   name = fields$character(),
+#'   title = fields$character()
 #' )
 #' x <- list(name = "Jane Doe", title = "hello world")
 #' z$load(x, as_df = TRUE)
 #'
 #' # list of lists
 #' z <- Schema$new("MySchema",
-#'   name = puft_fields$character(),
-#'   title = puft_fields$character()
+#'   name = fields$character(),
+#'   title = fields$character()
 #' )
 #' x <- list(
 #'   list(name = "Jane Doe", title = "hello world"),
@@ -59,26 +75,140 @@
 #' x2 <- data.frame(name = c("jill", "jane"), title = c("boss", "ceo"),
 #'   stringsAsFactors = FALSE)
 #' z <- Schema$new("FooBar",
-#'   name = puft_fields$character(),
-#'   title = puft_fields$character()
+#'   name = fields$character(),
+#'   title = fields$character()
 #' )
 #' z$load_df(x)
 #' z$load_df(x2)
 #' z$load_df(x2, many = TRUE, simplifyVector = FALSE)
+#' 
+#' # nested
+#' artist_schema <- Schema$new("ArtistSchema",
+#'   name = fields$character(),
+#'   role = fields$character(),
+#'   instrument = fields$character()
+#' )
+#' album_schema <- Schema$new("AlbumSchema",
+#'   title = fields$character(),
+#'   release_date = fields$date(),
+#'   artist = fields$nested(artist_schema)
+#' )
+#' artist_schema
+#' album_schema
+#' bowie <- list(name="David Bowie", role="lead", instrument="voice")
+#' album <- list(title="Hunky Dory", release_date="12-17-1971", artist=bowie)
+#' album_schema$dump(album)
+#' album_schema$load(album)
+#' ## many
+#' albums <- list(
+#'   list(title="Hunky Dory", release_date="12-17-1971", artist=bowie),
+#'   list(title="Mars and Venus", release_date="03-05-1974", artist=bowie)
+#' )
+#' album_schema$dump(albums, many=TRUE)
+#' album_schema$load(albums, many=TRUE)
+#' ## bad
+#' album$artist <- list(stuff = "things")
+#' album_schema$load(album)
+#' 
+#' # Deserialize/load and create object with post_load
+#' z <- Schema$new("ArtistSchema",
+#'   name = fields$character(),
+#'   role = fields$character(),
+#'   instrument = fields$character(),
+#'   post_load = {
+#'     function(x) structure(x, class = "Artist", attr = "hello")
+#'   }
+#' )
+#' z$post_load
+#' w <- list(name="David Bowie", role="lead", instrument="voice")
+#' z$load(w)
+#' print.Artist <- function(x) {
+#'   cat("Artist\n")
+#'   cat(sprintf("  name: %s\n", x$name))
+#'   cat(sprintf("  role: %s\n", x$role))
+#'   cat(sprintf("  instrument: %s\n", x$instrument))
+#' }
+#' z$load(w)
+#' 
+#' # from json
+#' json <- jsonlite::toJSON(w)
+#' z$load_json(json)
+#' ## many
+#' ww <- list(
+#'   list(name="David Bowie", role="lead", instrument="voice"),
+#'   list(name="Michael Jackson", role="lead", instrument="voice")
+#' )
+#' json <- jsonlite::toJSON(ww)
+#' z$load_json(json, simplifyVector = FALSE, many = TRUE)
 Schema <- R6::R6Class("Schema",
+  inherit = SchemaABC,
   public = list(
     #' @field schema_name the schema name
     schema_name = NULL,
     #' @field fields field names
     fields = list(),
+    #' @field post_load field names
+    post_load = NULL,
+    #' @field many xxxx
+    many = NULL,
+    #' @field only xxxx
+    only = NULL,
+    #' @field exclude xxxx
+    exclude = NULL,
+    #' @field ordered xxxx
+    ordered = NULL,
+    #' @field load_only xxxx
+    load_only = NULL,
+    #' @field dump_only xxxx
+    dump_only = NULL,
+    #' @field partial xxxx
+    partial = NULL,
+    #' @field unknown xxxx
+    unknown = NULL,
+    #' @field context xxxx
+    context = NULL,
+    #' @field opts field names
+    opts = schema_opts,
 
     #' @description Create a new `Schema` object
     #' @param schema_name (character) the schema name
     #' @param ... additional arguments, passed to `fields`
-    #' @return A new `Schema` object
-    initialize = function(schema_name, ...) {
+    #' @param only Whitelist of the declared fields to select when
+    #' instantiating the Schema. If None, all fields are used. Nested fields
+    #' can be represented with dot delimiters.
+    #' @param exclude Blacklist of the declared fields to exclude
+    #' when instantiating the Schema. If a field appears in both `only` and
+    #' `exclude`, it is not used. Nested fields can be represented with dot
+    #' delimiters.
+    #' @param many Should be set to `True` if ``obj`` is a collection
+    #' so that the object will be serialized to a list.
+    #' @param context Optional context passed to :class:`fields.Method` and
+    #' :class:`fields.Function` fields.
+    #' @param load_only Fields to skip during serialization (write-only fields)
+    #' @param dump_only Fields to skip during deserialization (read-only fields)
+    #' @param partial Whether to ignore missing fields and not require
+    #' any fields declared. Propagates down to ``Nested`` fields as well. If
+    #' its value is an iterable, only missing fields listed in that iterable
+    #' will be ignored. Use dot delimiters to specify nested fields.
+    #' @param unknown Whether to exclude, include, or raise an error for unknown
+    #' fields in the data. Use `EXCLUDE`, `INCLUDE` or `RAISE`.
+    initialize = function(schema_name, ..., post_load = NULL, only = NULL,
+      exclude = NULL, many = FALSE, context = NULL, load_only = NULL,
+      dump_only = NULL, partial = FALSE, unknown = NULL) {
+
+      class_registry$register(schema_name, self)
       self$schema_name <- schema_name
       self$fields <- list(...)
+      self$post_load <- post_load
+      self$many <- many
+      self$only <- only
+      self$exclude <- self$opts$exclude %||% exclude
+      self$ordered <- self$opts$ordered
+      self$load_only <- load_only %||% self$opts$load_only
+      self$dump_only <- dump_only %||% self$opts$dump_only
+      self$partial <- partial
+      self$unknown <- unknown %||% self$opts$unknown
+      self$context <- context %||% list()
     },
 
     #' @description print method for `Schema` objects
@@ -92,17 +222,24 @@ Schema <- R6::R6Class("Schema",
 
     #' @description Convert various objects to a list
     #' @param x input
+    #' @param many (logical) Should be set to `TRUE` if `obj` is a list of
+    #' lists. default: `FALSE`
     #' @return list
-    dump = function(x) {
-      # assert(x, "list")
+    dump = function(x, many = FALSE) {
       x <- private$hndlr(x)
-      for (i in seq_along(x)) {
-        if (!names(x)[i] %in% names(self$fields))
-          stop("named element not in allowed set",
-            call. = FALSE)
+      parse_one <- function(z, self) {
+        for (i in seq_along(z)) {
+          if (!names(z)[i] %in% names(self$fields))
+            stop("named element not in allowed set",
+              call. = FALSE)
+        }
+        as.list(z)
       }
-
-      as.list(x)
+      if (!many) {
+        parse_one(x, self)
+      } else {
+        lapply(x, parse_one, self = self)
+      }
     },
 
     #' @description Same as `dump()`, but returns JSON
@@ -180,6 +317,12 @@ Schema <- R6::R6Class("Schema",
             ret[[i]] <- missing_one(data[[i]], ret[[i]], self, unknown)
           }
         }
+      }
+
+      if (!is.null(self$post_load) && is.function(self$post_load)) {
+        ret <- if (many) lapply(ret, self$post_load) else self$post_load(ret)
+        # make as_df=FALSE if custom object returned
+        as_df <- FALSE
       }
 
       if (as_df) as_tbl(ret, many) else ret

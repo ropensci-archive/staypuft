@@ -246,6 +246,16 @@ Any <- R6::R6Class("Any",
   )
 )
 
+#' Nested
+#' @examples
+#' artist_schema <- Schema$new("ArtistSchema",
+#'   name = fields$character()
+#' )
+#' x <- Nested$new(artist_schema)
+#' x
+#' x$nested
+#' x$deserialize_(value = list(name = 6)) # good
+#' x$deserialize_(value = list(foobar = 6)) # bad
 Nested <- R6::R6Class("Nested",
   inherit = Field,
   public = list(
@@ -253,12 +263,12 @@ Nested <- R6::R6Class("Nested",
     nested = NULL,
     only = NULL,
     exclude = NULL,
-    many = NULL,
-    unknown = NULL,
+    many = FALSE,
+    unknown = "raise",
     schema_ = NULL,
 
     initialize = function(nested, default = miss_ing, exclude = NULL, 
-      only = NULL, many = FALSE, unknown = NULL) {
+      only = NULL, many = FALSE, unknown = "raise", ...) {
 
       super$initialize(...)
       if (!is.null(only) && something) stop("'only' should be a vector of strings")
@@ -277,38 +287,53 @@ Nested <- R6::R6Class("Nested",
         # inherit context from parent
         context <- self$parent$context %||% list()
         if (inherits(self$nested, "SchemaABC")) {
-          self$schema_ = self$nested
-          self$schema_$context$update(context)
+          self$schema_ <- self$nested
+          self$schema_$context <- c(self$schema_$context, context)
         } else {
-          if (inherits(self$nested, type) && issubclass(self$nested, SchemaABC)) {
-            schema_class = self.nested
+          if (
+            # inherits(self$nested, type) &&
+            inherits(self$nested, "SchemaABC")
+          ) {
+            schema_class <- self$nested
           } else if (!inherits(self$nested, "character")) {
-
-          } else if (self$nested == "self") {
-
+            stop("Nested fields must be passed a Schema")
+          # } else if (self$nested == "self") {
           } else {
-            schema_class = class_registry$get_class(self$nested)
+            schema_class = class_registry$get_class(self$nested$schema_name)
           }
+          self$schema_ <- schema_class(
+            many=self$many,
+            only=self$only,
+            exclude=self$exclude,
+            context=context
+            # load_only=self$_nested_normalized_option("load_only"),
+            # dump_only=self$_nested_normalized_option("dump_only")
+          )
         }
       }
+      return(self$schema_)
     },
-    serialize_ = function(value, attr = NULL, obj = NULL) {
-      if (is.null(value)) return(NULL)
-      if (value %in% self$truthy) return(TRUE)
-      if (value %in% self$falsy) return(FALSE)
-      return(as.logical(value))
+    serialize_ = function(value, nested_obj, attr = NULL, obj = NULL) {
+      schema <- self$schema()
+      if (is.null(nested_obj)) return(NULL)
+      many <- schema$many %||% self$many
+      return(schema$dump(nested_obj, many=many))
     },
-    deserialize_ = function(value, attr = NULL, data = NULL) {
-      if (length(self$truthy) == 0 || 
-        all(is.na(self$truthy)) || 
-        is.null(self$truthy)
-      ) {
-        return(as.logical(value))
-      } else {
-        if (value %in% self$truthy) return(TRUE)
-        if (value %in% self$falsy) return(FALSE)
-      }
-      super$fail("invalid")
+    test_list = function(self, value) {
+      many <- self$schema$many %||% self$many
+      if (many && !is.list(value)) super$fail("type")
+    },
+    load_ = function(value, data = NULL, partial = FALSE) {
+      self$schema()
+      valid_data <- tryCatch(
+        self$schema_$load(value, unknown=self$unknown, partial=partial),
+        error = function(e) e)
+      if (inherits(valid_data, "error")) stop(valid_data$message)
+      return(valid_data)
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL, partial = FALSE) {
+      # self$test_list(value)
+      return(self$load_(value, data, partial=partial))
     }
   )
 )

@@ -8,8 +8,8 @@ Base schema class with which to define custom schemas
 }
 \examples{
 z <- Schema$new("FooBar",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 z
 z$fields
@@ -23,8 +23,8 @@ z$dump_json(x, auto_unbox = TRUE)
 
 
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 z
 x <- list(name = "Jane Doe", title = "Howdy doody")
@@ -38,16 +38,16 @@ z$load_json(jsonlite::toJSON(x, auto_unbox=TRUE))
 
 # as data.frame
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 x <- list(name = "Jane Doe", title = "hello world")
 z$load(x, as_df = TRUE)
 
 # list of lists
 z <- Schema$new("MySchema",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 x <- list(
   list(name = "Jane Doe", title = "hello world"),
@@ -63,12 +63,74 @@ x2 <- data.frame(name = c("jill", "jane"), title = c("boss", "ceo"),
 x2 <- data.frame(name = c("jill", "jane"), title = c("boss", "ceo"),
   stringsAsFactors = FALSE)
 z <- Schema$new("FooBar",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 z$load_df(x)
 z$load_df(x2)
 z$load_df(x2, many = TRUE, simplifyVector = FALSE)
+
+# nested
+artist_schema <- Schema$new("ArtistSchema",
+  name = fields$character(),
+  role = fields$character(),
+  instrument = fields$character()
+)
+album_schema <- Schema$new("AlbumSchema",
+  title = fields$character(),
+  release_date = fields$date(),
+  artist = fields$nested(artist_schema)
+)
+artist_schema
+album_schema
+bowie <- list(name="David Bowie", role="lead", instrument="voice")
+album <- list(title="Hunky Dory", release_date="12-17-1971", artist=bowie)
+album_schema$dump(album)
+album_schema$load(album)
+## many
+albums <- list(
+  list(title="Hunky Dory", release_date="12-17-1971", artist=bowie),
+  list(title="Mars and Venus", release_date="03-05-1974", artist=bowie)
+)
+album_schema$dump(albums, many=TRUE)
+album_schema$load(albums, many=TRUE)
+## bad
+album$artist <- list(stuff = "things")
+album_schema$load(album)
+
+# Deserialize/load and create object with post_load
+z <- Schema$new("ArtistSchema",
+  name = fields$character(),
+  role = fields$character(),
+  instrument = fields$character(),
+  post_load = {
+    function(x) structure(x, class = "Artist", attr = "hello")
+  }
+)
+z$post_load
+w <- list(name="David Bowie", role="lead", instrument="voice")
+z$load(w)
+print.Artist <- function(x) {
+  cat("Artist\n")
+  cat(sprintf("  name: \%s\n", x$name))
+  cat(sprintf("  role: \%s\n", x$role))
+  cat(sprintf("  instrument: \%s\n", x$instrument))
+}
+z$load(w)
+
+# from json
+json <- jsonlite::toJSON(w)
+z$load_json(json)
+## many
+ww <- list(
+  list(name="David Bowie", role="lead", instrument="voice"),
+  list(name="Michael Jackson", role="lead", instrument="voice")
+)
+json <- jsonlite::toJSON(ww)
+z$load_json(json, simplifyVector = FALSE, many = TRUE)
+}
+\section{Super class}{
+\code{\link[staypuft:SchemaABC]{staypuft::SchemaABC}} -> \code{Schema}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -76,6 +138,28 @@ z$load_df(x2, many = TRUE, simplifyVector = FALSE)
 \item{\code{schema_name}}{the schema name}
 
 \item{\code{fields}}{field names}
+
+\item{\code{post_load}}{field names}
+
+\item{\code{many}}{xxxx}
+
+\item{\code{only}}{xxxx}
+
+\item{\code{exclude}}{xxxx}
+
+\item{\code{ordered}}{xxxx}
+
+\item{\code{load_only}}{xxxx}
+
+\item{\code{dump_only}}{xxxx}
+
+\item{\code{partial}}{xxxx}
+
+\item{\code{unknown}}{xxxx}
+
+\item{\code{context}}{xxxx}
+
+\item{\code{opts}}{field names}
 }
 \if{html}{\out{</div>}}
 }
@@ -92,13 +176,31 @@ z$load_df(x2, many = TRUE, simplifyVector = FALSE)
 \item \href{#method-clone}{\code{Schema$clone()}}
 }
 }
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Schema} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$new(schema_name, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$new(
+  schema_name,
+  ...,
+  post_load = NULL,
+  only = NULL,
+  exclude = NULL,
+  many = FALSE,
+  context = NULL,
+  load_only = NULL,
+  dump_only = NULL,
+  partial = FALSE,
+  unknown = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -107,11 +209,35 @@ Create a new \code{Schema} object
 \item{\code{schema_name}}{(character) the schema name}
 
 \item{\code{...}}{additional arguments, passed to \code{fields}}
+
+\item{\code{only}}{Whitelist of the declared fields to select when
+instantiating the Schema. If None, all fields are used. Nested fields
+can be represented with dot delimiters.}
+
+\item{\code{exclude}}{Blacklist of the declared fields to exclude
+when instantiating the Schema. If a field appears in both \code{only} and
+\code{exclude}, it is not used. Nested fields can be represented with dot
+delimiters.}
+
+\item{\code{many}}{Should be set to \code{True} if \code{obj} is a collection
+so that the object will be serialized to a list.}
+
+\item{\code{context}}{Optional context passed to :class:\code{fields.Method} and
+:class:\code{fields.Function} fields.}
+
+\item{\code{load_only}}{Fields to skip during serialization (write-only fields)}
+
+\item{\code{dump_only}}{Fields to skip during deserialization (read-only fields)}
+
+\item{\code{partial}}{Whether to ignore missing fields and not require
+any fields declared. Propagates down to \code{Nested} fields as well. If
+its value is an iterable, only missing fields listed in that iterable
+will be ignored. Use dot delimiters to specify nested fields.}
+
+\item{\code{unknown}}{Whether to exclude, include, or raise an error for unknown
+fields in the data. Use \code{EXCLUDE}, \code{INCLUDE} or \code{RAISE}.}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new \code{Schema} object
 }
 }
 \if{html}{\out{<hr>}}
@@ -139,13 +265,16 @@ print method for \code{Schema} objects
 \subsection{Method \code{dump()}}{
 Convert various objects to a list
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$dump(x)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$dump(x, many = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{input}
+
+\item{\code{many}}{(logical) Should be set to \code{TRUE} if \code{obj} is a list of
+lists. default: \code{FALSE}}
 }
 \if{html}{\out{</div>}}
 }
