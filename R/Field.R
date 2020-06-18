@@ -44,13 +44,13 @@ Field <- R6::R6Class(
     #' @field validate xxx
     validate = NULL,
     #' @field required (logical) xxx
-    required = NULL,
+    required = FALSE,
     #' @field allow_none (logical) xxx
     allow_none = NULL,
     #' @field load_only (logical) xxx
-    load_only = NULL,
+    load_only = FALSE,
     #' @field dump_only (logical) xxx
-    dump_only = NULL,
+    dump_only = FALSE,
     #' @field missing (logical) xxx
     missing = NULL,
     #' @field metadata Extra arguments to be stored as metadata.

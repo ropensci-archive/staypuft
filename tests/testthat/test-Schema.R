@@ -57,6 +57,20 @@ test_that("Schema: unknown fields", {
   expect_error(sch$dump_json(x), "named element not in allowed set")
 })
 
+context("Schema: required fields")
+test_that("Schema: unknown fields", {
+  xsch <- Schema$new("FooBar",
+    name = fields$character(required=TRUE),
+    title = fields$character()
+  )
+  x <- list(name = "Jane Doe", title = "Howdy doody")
+  x_no_name <- list(title = "Howdy doody")
+  expect_is(xsch$load(x), "list")
+  expect_error(xsch$load(x_no_name),
+    "Missing data for required field")
+})
+
+context("Schema: as_df parameter")
 test_that("Schema: as_df works", {
   # single list
   x <- list(name = "Jane Doe", title = "hello world")

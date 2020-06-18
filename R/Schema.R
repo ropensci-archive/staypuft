@@ -280,11 +280,11 @@ Schema <- R6::R6Class("Schema",
           # if nested, do something ...
 
           # deserialize
-          if (!inherits(raw_value, "Missing")) {
-            val <- fld$deserialize(raw_value, key)
-            # append to list
-            ret[[ key ]] <- val
-          }
+          # if (!inherits(raw_value, "Missing")) {
+          val <- fld$deserialize(raw_value, key)
+          # append to list
+          ret[[ key ]] <- val
+          # }
         }
         return(ret)
       }
