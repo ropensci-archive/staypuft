@@ -9,7 +9,7 @@ test_that("Any", {
   expect_is(Any, "R6ClassGenerator")
   expect_is(Any$new(), "Any")
   z <- Schema$new("MySchema",
-    name = puft_fields$any()
+    name = fields$any()
   )
   expect_identical(
     z$load(list(name = 4)),

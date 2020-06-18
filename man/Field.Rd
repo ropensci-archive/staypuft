@@ -13,16 +13,16 @@ serialized or deserialized. On error, the name of the field will be
 returned.
 }
 \examples{
-x <- puft_fields$field()
+x <- fields$field()
 x
 x$error_messages
 
-z <- puft_fields$character()
+z <- fields$character()
 z
 z$error_messages
 z$serialize(attr = "foo", obj = list(foo = "bar"))
 z$deserialize("foo")
-z$deserialize(puft_fields$missing())
+z$deserialize(fields$missing())
 }
 \section{Super class}{
 \code{\link[staypuft:FieldABC]{staypuft::FieldABC}} -> \code{Field}
@@ -288,7 +288,7 @@ xxxx
 \subsection{Method \code{deserialize()}}{
 Deserialize \code{value}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Field$deserialize(value, attr = NULL, data = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Field$deserialize(value, attr = NULL, data = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

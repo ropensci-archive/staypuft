@@ -1,6 +1,6 @@
 sch <- Schema$new("FooBar",
-  name = puft_fields$character(),
-  title = puft_fields$character()
+  name = fields$character(),
+  title = fields$character()
 )
 
 context("Schema: structure")
