@@ -1,0 +1,92 @@
+---
+title: "Use cases"
+author: "Scott Chamberlain"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Use cases}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Validate JSON
+
+```{r}
+library(staypuft)
+```
+
+An example `package.json` for a Python package
+
+```{r}
+json <- '{
+  "name": "dunderscore",
+  "version": "1.2.3",
+  "description": "The Pythonic JavaScript toolkit",
+  "devDependencies": {
+    "pest": "^23.4.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "pest"
+  },
+  "license": "MIT"
+}'
+```
+
+Define a schema
+
+```{r}
+check_json <- Schema$new("CheckJSON",
+  name = fields$character(required=TRUE),
+  version = fields$character(required=TRUE),
+  description = fields$character(required=TRUE),
+  main = fields$character(),
+  homepage = fields$url(),
+  scripts = fields$named_list(keys=fields$character(), values=fields$character()),
+  license = fields$character(required=TRUE),
+  dependencies = fields$named_list(keys=fields$character(), values=fields$character()),
+  dev_dependencies = fields$named_list(
+    keys=fields$character(),
+    values=fields$character(),
+    data_key="devDependencies",
+  ),
+  unknown = "include"
+)
+```
+
+Check the `json` against the schema. In this case it's valid, so we get the list output
+
+```{r}
+check_json$load_json(json)
+```
+
+In the above case, the JSON is valid. What if we give it bad JSON? Here, a required field (`license`) is missing:
+
+
+```{r}
+json_bad <- '{
+  "name": "dunderscore",
+  "version": "1.2.3",
+  "description": "The Pythonic JavaScript toolkit",
+  "devDependencies": {
+    "pest": "^23.4.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "pest"
+  }
+}'
+```
+
+Check it
+
+```{r error=TRUE}
+check_json$load_json(json_bad)
+```

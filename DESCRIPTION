@@ -1,7 +1,7 @@
 Package: staypuft
 Title: Convert Complex Objects to and from R Data Structures
 Description: Convert complex objects to and from R data structures.
-Version: 0.0.1.98
+Version: 0.0.2.91
 Authors@R: c(
     person(given = "Scott",
            family = "Chamberlain",

@@ -23,6 +23,12 @@ z$error_messages
 z$serialize(attr = "foo", obj = list(foo = "bar"))
 z$deserialize("foo")
 z$deserialize(fields$missing())
+
+x <- Schema$new("x", cow = fields$character(data_key = "stuff"))
+x
+x$fields$cow$data_key
+x$load(list(cow = 5))
+x$load(data = list(stuff = 5))
 }
 \section{Super class}{
 \code{\link[staypuft:FieldABC]{staypuft::FieldABC}} -> \code{Field}

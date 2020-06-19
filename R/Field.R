@@ -18,6 +18,12 @@
 #' z$serialize(attr = "foo", obj = list(foo = "bar"))
 #' z$deserialize("foo")
 #' z$deserialize(fields$missing())
+#' 
+#' x <- Schema$new("x", cow = fields$character(data_key = "stuff"))
+#' x
+#' x$fields$cow$data_key
+#' x$load(list(cow = 5))
+#' x$load(data = list(stuff = 5))
 Field <- R6::R6Class(
   classname = "Field",
   inherit = FieldABC,
@@ -195,6 +201,7 @@ Field <- R6::R6Class(
       #         else:
       #             errors.extend(err.messages)
       for (i in seq_along(self$validators)) {
+        if (inherits(value, "Missing")) next
         b <- tryCatch(self$validators[[i]](value), error = function(e) e)
         if (inherits(b, "error")) {
           stop(b$message, call.=FALSE)
@@ -265,9 +272,11 @@ Field <- R6::R6Class(
       # Validate required fields, deserialize, then validate deserialized value
       self$validate_missing_(value)
       if (inherits(value, "Missing")) {
-        miss = self$missing
+        return(NULL)
+        # miss = self$missing
         # return miss() if callable(miss) else miss
-        if (is.function(miss)) miss() else miss
+        # FIXME, no miss() function yet
+        # if (is.function(miss)) miss() else miss
       }
       if (self$allow_none && is.null(value)) return(NULL)
       output = self$deserialize_(value, attr, data, ...)

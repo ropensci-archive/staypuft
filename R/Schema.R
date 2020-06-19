@@ -268,8 +268,12 @@ Schema <- R6::R6Class("Schema",
           stop("all elements in a list must be named", call. = FALSE)
         ret = list()
         for (i in seq_along(self$fields)) {
-          key <- names(self$fields)[i]
           fld <- self$fields[[i]]
+          if (!is.null(fld$data_key)) {
+            key <- fld$data_key
+          } else {
+            key <- names(self$fields)[i]
+          }
           raw_value <- data[[key]] %||% miss_ing
 
           if (inherits(raw_value, "Missing")) {
@@ -299,7 +303,15 @@ Schema <- R6::R6Class("Schema",
       if (unknown != "exclude") {
         # uknown_fields <- names(data)[!names(data) %in% names(self$fields)]
         missing_one <- function(z, ret, self, unknown) {
-          unk <- z[which(!names(z) %in% names(self$fields))]
+          nmz <- c()
+          for (i in seq_along(self$fields)) {
+            nmz[i] <- if (is.null(self$fields[[i]]$data_key)) {
+              names(self$fields)[i]
+            } else {
+              self$fields[[i]]$data_key
+            }
+          }
+          unk <- z[which(!names(z) %in% nmz)]
           for (i in seq_along(unk)) {
             key <- names(unk)[i]
             if (unknown == "include") {
