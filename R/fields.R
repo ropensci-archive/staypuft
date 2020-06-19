@@ -15,6 +15,7 @@
 #' - [Nested]
 #' - [Url]
 #' - [Email]
+#' - [NamedList]
 #' - more coming soon
 #'
 #' @section Usage:
@@ -38,5 +39,6 @@ fields <- list(
   date = function(...) XDate$new(...),
   nested = function(...) Nested$new(...),
   url = function(...) Url$new(...),
-  email = function(...) Email$new(...)
+  email = function(...) Email$new(...),
+  named_list = function(...) NamedList$new(...)
 )

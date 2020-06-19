@@ -5,7 +5,7 @@
 \alias{fields}
 \title{staypuft fields}
 \format{
-An object of class \code{list} of length 12.
+An object of class \code{list} of length 13.
 }
 \usage{
 fields
@@ -27,6 +27,7 @@ staypuft fields
 \item \link{Nested}
 \item \link{Url}
 \item \link{Email}
+\item \link{NamedList}
 \item more coming soon
 }
 }

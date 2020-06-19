@@ -249,41 +249,6 @@ Boolean <- R6::R6Class("Boolean",
   )
 )
 
-# validate_url <- function(relative = FALSE, schemes = NULL, require_tld = TRUE) {
-#   schemes_default <- c("http", "https", "ftp", "ftps")
-#   if (is.null(schemes)) schemes <- schemes_default
-#   scheme_chk <- schemes %in% schemes_default
-#   if (!all(scheme_chk)) 
-#     stop("1 or more schemes not in allowed set: ",
-#       paste0(schemes[!scheme_chk], collapse=", "))
-#   function(x) {
-#     valid_chars <- rex::rex(except_some_of(".", "/", " ", "-"))
-#     re <- rex::rex(
-#       start,
-#       # protocol identifier (optional) + //
-#       group(or(schemes), "://"),
-#       # group(list("http", maybe("s")) %or% list("ftp", maybe("s")), "://"),
-#       # user:pass authentication (optional)
-#       maybe(non_spaces,
-#         maybe(":", zero_or_more(non_space)),
-#         "@"),
-#       #host name
-#       group(zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
-#       #domain name
-#       zero_or_more(".", zero_or_more(valid_chars, zero_or_more("-")), one_or_more(valid_chars)),
-#       #TLD identifier
-#       group(".", valid_chars %>% at_least(2)),
-#       # server port number (optional)
-#       maybe(":", digit %>% between(2, 5)),
-#       # resource path (optional)
-#       maybe("/", non_space %>% zero_or_more()),
-#       end
-#     )
-#     # if (!grepl(re, x)) stop("bad URL")
-#     if (!grepl(re, x)) super$fail("invalid_url")
-#   }
-# }
-
 #' @title Url
 #' @description A validated URL field. Validation occurs during both
 #' serialization and deserialization
@@ -411,6 +376,82 @@ Any <- R6::R6Class("Any",
     },
     deserialize_ = function(value, attr = NULL, data = NULL) {
       return(value)
+    }
+  )
+)
+
+#' @title NamedList 
+#' @description A class for lists with key-value pairs - aka in R: named lists
+#' @export
+#' @keywords internal
+#' @examples
+#' x <- Schema$new("foo",
+#'   title = fields$character(),
+#'   age = fields$integer(strict = TRUE),
+#'   name = fields$named_list(keys=fields$character(), values=fields$number())
+#' )
+#' x
+#' # good
+#' x$load(list(
+#'   title = "barry", 
+#'   age = 3L, 
+#'   name = list(foo = 3.4, iff = 5)))
+#' # bad
+#' if (interactive()) {
+#' x$load(list(
+#'   title = "barry", 
+#'   age = 3L, 
+#'   name = list(foo = 3.4, iff = "a")))
+#' 
+#' x$load(list(
+#'   title = "barry", 
+#'   age = 3L, 
+#'   name = list("bar", "else")))
+#' }
+NamedList <- R6::R6Class("NamedList",
+  inherit = Field,
+  public = list(
+    class_name = "NamedList",
+    key_field = NULL,
+    value_field = NULL,
+    initialize = function(keys, values, ...) {
+      super$initialize(...)
+      if (!is.null(keys)) self$key_field <- keys
+      if (!is.null(values)) self$value_field <- values
+    },
+    serialize_ = function(value, attr = NULL, obj = NULL) {
+      if (is.null(value)) return(NULL)
+      return("FIXME, not done yet")
+    },
+    deserialize_ = function(value, attr = NULL, data = NULL) {
+      # Deserialize keys
+      if (is.null(self$key_field)) {
+        keys <- as.list(stats::setNames(names(value), names(value)))
+      } else {
+        keys <- list()
+        for (i in seq_along(value)) {
+          keys[names(value)[i]] <- self$key_field$deserialize(names(value)[i])
+        }
+      }
+
+      # Deserialize values
+      result <- list()
+      if (is.null(self$value_field)) {
+        for (i in seq_along(value)) {
+          if (names(value)[i] %in% names(keys)) {
+            result[ keys[[names(value)[i]]] ] <- value[[i]]
+          }
+        }
+      } else {
+        for (i in seq_along(value)) {
+          z <- self$value_field$deserialize(value[[i]])
+          if (names(value)[i] %in% names(keys)) {
+            result[ keys[[names(value)[i]]] ] <- z
+          }
+        }
+      }
+
+      return(result)
     }
   )
 )
