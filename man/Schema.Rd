@@ -199,7 +199,7 @@ Create a new \code{Schema} object
   load_only = NULL,
   dump_only = NULL,
   partial = FALSE,
-  unknown = NULL
+  unknown = "raise"
 )}\if{html}{\out{</div>}}
 }
 
@@ -310,13 +310,7 @@ JSON (character)
 \subsection{Method \code{load()}}{
 Load data
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$load(
-  data,
-  many = FALSE,
-  partial = FALSE,
-  unknown = "raise",
-  as_df = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$load(data, many = FALSE, partial = FALSE, unknown = NULL, as_df = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -346,7 +340,7 @@ xxxx
 \subsection{Method \code{load_json()}}{
 Same as \code{load()}, but takes JSON as input
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$load_json(data, many = FALSE, partial = FALSE, unknown = "raise", ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$load_json(data, many = FALSE, partial = FALSE, unknown = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -376,7 +370,7 @@ a list
 \subsection{Method \code{load_df()}}{
 Same as \code{load()}, but takes a data.frame as input
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Schema$load_df(data, many = FALSE, partial = FALSE, unknown = "raise", ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Schema$load_df(data, many = FALSE, partial = FALSE, unknown = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

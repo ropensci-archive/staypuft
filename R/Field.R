@@ -23,7 +23,7 @@
 #' x
 #' x$fields$cow$data_key
 #' x$load(list(cow = 5))
-#' x$load(data = list(stuff = 5))
+#' x$load(list(stuff = 5))
 Field <- R6::R6Class(
   classname = "Field",
   inherit = FieldABC,

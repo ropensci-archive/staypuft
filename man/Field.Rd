@@ -28,7 +28,7 @@ x <- Schema$new("x", cow = fields$character(data_key = "stuff"))
 x
 x$fields$cow$data_key
 x$load(list(cow = 5))
-x$load(data = list(stuff = 5))
+x$load(list(stuff = 5))
 }
 \section{Super class}{
 \code{\link[staypuft:FieldABC]{staypuft::FieldABC}} -> \code{Field}

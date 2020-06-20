@@ -164,7 +164,7 @@ Schema <- R6::R6Class("Schema",
     #' @field partial xxxx
     partial = NULL,
     #' @field unknown xxxx
-    unknown = NULL,
+    unknown = "raise",
     #' @field context xxxx
     context = NULL,
     #' @field opts field names
@@ -194,7 +194,7 @@ Schema <- R6::R6Class("Schema",
     #' fields in the data. Use `EXCLUDE`, `INCLUDE` or `RAISE`.
     initialize = function(schema_name, ..., post_load = NULL, only = NULL,
       exclude = NULL, many = FALSE, context = NULL, load_only = NULL,
-      dump_only = NULL, partial = FALSE, unknown = NULL) {
+      dump_only = NULL, partial = FALSE, unknown = "raise") {
 
       class_registry$register(schema_name, self)
       self$schema_name <- schema_name
@@ -259,9 +259,10 @@ Schema <- R6::R6Class("Schema",
     #' default: "raise"
     #' @param as_df (logical) convert to tibble? default: `FALSE`
     #' @return xxxx
-    load = function(data, many = FALSE, partial = FALSE, unknown = "raise",
+    load = function(data, many = FALSE, partial = FALSE, unknown = NULL,
       as_df = FALSE) {
 
+      if (is.null(unknown)) unknown <- self$unknown
       must_include(unknown, c('raise', 'exclude', 'include'))
       parse_one <- function(data, self, miss_ing, partial) {
         if (!has_names(data))
@@ -270,11 +271,12 @@ Schema <- R6::R6Class("Schema",
         for (i in seq_along(self$fields)) {
           fld <- self$fields[[i]]
           if (!is.null(fld$data_key)) {
-            key <- fld$data_key
+            raw_value <- data[[fld$data_key]] %||% miss_ing
+            # key <- fld$data_key
           } else {
-            key <- names(self$fields)[i]
+            raw_value <- data[[names(self$fields)[i]]] %||% miss_ing
           }
-          raw_value <- data[[key]] %||% miss_ing
+          key <- names(self$fields)[i]
 
           if (inherits(raw_value, "Missing")) {
             # FIXME: other logic
@@ -316,7 +318,7 @@ Schema <- R6::R6Class("Schema",
             key <- names(unk)[i]
             if (unknown == "include") {
               ret[[ key ]] <- unk[[i]]
-            } else {
+            } else if (unknown == "raise") {
               stop("Unknown field: ", key, call. = FALSE)
             }
           }
@@ -350,7 +352,7 @@ Schema <- R6::R6Class("Schema",
     #' @param ... additional params passed to [jsonlite::fromJSON()]
     #' @return a list
     load_json = function(data, many = FALSE, partial = FALSE,
-      unknown = "raise", ...) {
+      unknown = NULL, ...) {
 
       self$load(jsonlite::fromJSON(data, ...), many = many, partial = partial,
         unknown = unknown)
@@ -365,7 +367,7 @@ Schema <- R6::R6Class("Schema",
     #' default: "raise"
     #' @param ... additional params passed to [jsonlite::fromJSON()]
     #' @return a list
-    load_df = function(data, many = FALSE, partial = FALSE, unknown = "raise",
+    load_df = function(data, many = FALSE, partial = FALSE, unknown = NULL,
       ...) {
 
       self$load_json(jsonlite::toJSON(data), many = many, partial = partial,
